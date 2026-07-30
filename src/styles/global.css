@@ -1,28 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@400;600;700&display=swap');
 @import 'tailwindcss';
 
 @theme {
   --color-teal: #7bb5b2;
   --color-teal-dark: #4c8783;
   --color-teal-header: #3f7a76;
+  --color-teal-deep: #24504c;
   --color-gold: #edd286;
   --color-gold-dark: #d9b95c;
   --color-gold-ink: #7d5f14;
   --color-ink: #3a2f10;
   --color-cream: #fffaf0;
-  --font-heading: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+  --font-heading: 'Anton', 'Nunito', system-ui, sans-serif;
   --font-body: 'Nunito', system-ui, sans-serif;
 }
 
 @layer base {
   body {
     @apply bg-cream text-neutral-800 font-body leading-relaxed;
+    background-image: radial-gradient(
+      circle,
+      transparent 0,
+      transparent 46px,
+      rgba(36, 80, 76, 0.035) 46px,
+      rgba(36, 80, 76, 0.035) 48px,
+      transparent 48px
+    );
+    background-size: 110px 110px;
   }
 
   h1,
   h2,
   h3 {
-    @apply font-heading text-teal-dark leading-tight;
+    @apply font-heading text-teal-dark leading-tight uppercase tracking-tight;
   }
 
   h1 {
@@ -30,11 +40,11 @@
   }
 
   h2 {
-    @apply text-2xl mt-10 mb-4;
+    @apply text-xl mt-10 mb-4 tracking-wide;
   }
 
   h3 {
-    @apply text-xl mb-2;
+    @apply text-lg mb-2 tracking-wide;
   }
 
   p {
@@ -65,11 +75,33 @@
 
 @layer components {
   .btn {
-    @apply inline-block font-body font-bold bg-gold text-ink rounded-full px-6 py-2.5 no-underline transition-all hover:bg-gold-dark hover:-translate-y-0.5;
+    @apply inline-block font-body font-extrabold uppercase tracking-wide text-sm bg-gold text-ink rounded px-6 py-2.5 no-underline transition-all hover:bg-gold-dark hover:-translate-y-0.5;
   }
 
   .card {
-    @apply bg-white rounded-2xl border border-[#e9e0c8] border-l-[6px] border-l-teal px-6 py-5 shadow-sm;
+    @apply bg-white rounded-md border border-[#e9e0c8] px-6 py-5 shadow-sm;
+  }
+
+  /* Pinned notice card — for post-like list items (blog posts, updates) */
+  .notice {
+    @apply bg-white rounded border border-[#e9e0c8] px-6 py-5 shadow-md relative;
+  }
+
+  .notice::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: var(--color-gold);
+    border: 2px solid var(--color-teal-deep);
+  }
+
+  .badge {
+    @apply inline-block font-body font-bold uppercase tracking-widest text-xs bg-gold text-teal-deep rounded-full px-3 py-1;
   }
 
   .input {

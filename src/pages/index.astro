@@ -10,27 +10,41 @@ const posts = (await getCollection('blog'))
 ---
 
 <BaseLayout title="Home">
-  <h1>Villa Park Friends and Neighbors</h1>
-  <p class="text-xl font-heading text-gold-ink">
-    Building community, taking action, and celebrating the Villa Park neighborhood.
-  </p>
-  <p>News, updates, and resources for our neighborhood — maintained by volunteers.</p>
+  <div class="relative left-1/2 -translate-x-1/2 -mt-8 w-screen bg-teal-deep">
+    <div
+      class="absolute inset-0 opacity-40 bg-[radial-gradient(rgba(255,255,255,0.16)_1.4px,transparent_1.4px)] bg-[length:13px_13px]"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative max-w-2xl mx-auto px-6 py-14 text-center">
+      <span class="badge mb-5">Neighbors welcome</span>
+      <h1 class="text-white text-4xl sm:text-5xl mb-3">Villa Park Friends and Neighbors</h1>
+      <p class="font-heading uppercase tracking-wide text-gold text-lg sm:text-xl mb-2">
+        Building community, taking action, and celebrating the Villa Park neighborhood.
+      </p>
+      <p class="text-white/80 mb-0">
+        News, updates, and resources for our neighborhood — maintained by volunteers.
+      </p>
+    </div>
+  </div>
 
-  <h2>Latest Updates</h2>
+  <h2 class="mt-10">Latest Updates</h2>
   {posts.length === 0 && <p>No posts yet — check back soon.</p>}
-  <ul class="list-none p-0 space-y-5">
+  <ul class="list-none p-0 space-y-6">
     {posts.map((post) => (
-      <li class="card">
+      <li class="notice odd:-rotate-1 even:rotate-1">
         {post.data.image && (
           <img
             src={post.data.image}
             alt=""
-            class="w-full h-48 object-cover rounded-xl mb-4"
+            class="w-full h-48 object-cover rounded mb-4"
             loading="lazy"
           />
         )}
         <a href={`/blog/${post.id}`}>{post.data.title}</a>
-        <div class="text-neutral-500 text-sm">{post.data.date.toLocaleDateString()}</div>
+        <div class="text-neutral-500 text-xs font-mono uppercase tracking-wide mt-1">
+          {post.data.date.toLocaleDateString()}
+        </div>
         {post.data.summary && <p class="mb-0 mt-2">{post.data.summary}</p>}
       </li>
     ))}
