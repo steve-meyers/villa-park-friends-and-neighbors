@@ -12,30 +12,23 @@ const rendered = await Promise.all(resources.map((r) => render(r)));
   <h1>Resources</h1>
   <p>Handy links and information for the neighborhood.</p>
 
-  {resources.map((resource, i) => {
-    const { Content } = rendered[i];
-    return (
-      <section class="resource">
-        <h2>
-          {resource.data.url ? (
-            <a href={resource.data.url}>{resource.data.title}</a>
-          ) : (
-            resource.data.title
-          )}
-        </h2>
-        <Content />
-      </section>
-    );
-  })}
-
-  <style>
-    .resource {
-      border-bottom: 1px solid #e2e2e2;
-      padding-bottom: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .resource h2 {
-      margin-bottom: 0.25rem;
-    }
-  </style>
+  <div class="space-y-5">
+    {resources.map((resource, i) => {
+      const { Content } = rendered[i];
+      return (
+        <section class="card">
+          <h2 class="text-xl mb-2">
+            {resource.data.url ? (
+              <a href={resource.data.url}>{resource.data.title}</a>
+            ) : (
+              resource.data.title
+            )}
+          </h2>
+          <div class="[&_p:last-child]:mb-0">
+            <Content />
+          </div>
+        </section>
+      );
+    })}
+  </div>
 </BaseLayout>

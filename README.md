@@ -1,4 +1,4 @@
-# Maple Street Neighborhood Site
+# Villa Park Friends and Neighbors
 
 A simple, low-cost neighborhood website: static Astro site + Decap CMS for content editing. No database, no server to maintain — content lives as markdown files in this repo.
 

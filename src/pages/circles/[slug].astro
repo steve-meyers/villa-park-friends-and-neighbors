@@ -1,0 +1,20 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const circles = await getCollection('circles');
+  return circles.map((circle) => ({
+    params: { slug: circle.id },
+    props: { circle },
+  }));
+}
+
+const { circle } = Astro.props;
+const { Content } = await render(circle);
+---
+
+<BaseLayout title={circle.data.title}>
+  <h1>{circle.data.title}</h1>
+  <Content />
+</BaseLayout>

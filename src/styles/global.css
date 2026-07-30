@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-teal: #7bb5b2;
+  --color-teal-dark: #4c8783;
+  --color-gold: #edd286;
+  --color-gold-dark: #d9b95c;
+  --color-cream: #fffaf0;
+  --font-heading: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-cream text-neutral-800 font-body leading-relaxed;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-heading text-teal-dark leading-tight;
+  }
+
+  h1 {
+    @apply text-4xl mb-4;
+  }
+
+  h2 {
+    @apply text-2xl mt-10 mb-4;
+  }
+
+  h3 {
+    @apply text-xl mb-2;
+  }
+
+  p {
+    @apply mb-4;
+  }
+
+  ul,
+  ol {
+    @apply mb-4 pl-6;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  li {
+    @apply mb-1;
+  }
+
+  a {
+    @apply text-teal-dark decoration-gold-dark hover:text-gold-dark underline-offset-4;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-block font-body font-bold bg-gold text-[#3a2f10] rounded-full px-6 py-2.5 no-underline transition-all hover:bg-gold-dark hover:-translate-y-0.5;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl border border-[#e9e0c8] border-l-[6px] border-l-teal px-6 py-5 shadow-sm;
+  }
+
+  .input {
+    @apply border-2 border-[#e9e0c8] rounded-lg px-3 py-2.5 font-body focus:outline-none focus:border-teal;
+  }
+}

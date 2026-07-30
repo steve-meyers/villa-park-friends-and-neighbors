@@ -10,31 +10,23 @@ const posts = (await getCollection('blog')).sort(
 <BaseLayout title="Blog">
   <h1>Blog</h1>
   {posts.length === 0 && <p>No posts yet — check back soon.</p>}
-  <ul class="post-list">
+  <ul class="list-none p-0 space-y-5">
     {posts.map((post) => (
-      <li>
+      <li class="card">
+        {post.data.image && (
+          <img
+            src={post.data.image}
+            alt=""
+            class="w-full h-48 object-cover rounded-xl mb-4"
+            loading="lazy"
+          />
+        )}
         <a href={`/blog/${post.id}`}>{post.data.title}</a>
-        <div class="meta">
+        <div class="text-neutral-500 text-sm">
           {post.data.date.toLocaleDateString()} &middot; {post.data.author}
         </div>
-        {post.data.summary && <p>{post.data.summary}</p>}
+        {post.data.summary && <p class="mb-0 mt-2">{post.data.summary}</p>}
       </li>
     ))}
   </ul>
-
-  <style>
-    .post-list {
-      list-style: none;
-      padding: 0;
-    }
-    .post-list li {
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid #e2e2e2;
-      padding-bottom: 1.5rem;
-    }
-    .meta {
-      color: #6b6b6b;
-      font-size: 0.9rem;
-    }
-  </style>
 </BaseLayout>

@@ -17,16 +17,12 @@ const { Content } = await render(post);
 <BaseLayout title={post.data.title}>
   <article>
     <h1>{post.data.title}</h1>
-    <p class="meta">
+    <p class="text-neutral-500 text-sm">
       {post.data.date.toLocaleDateString()} &middot; {post.data.author}
     </p>
+    {post.data.image && (
+      <img src={post.data.image} alt="" class="w-full rounded-xl mb-4" loading="lazy" />
+    )}
     <Content />
   </article>
-
-  <style>
-    .meta {
-      color: #6b6b6b;
-      font-size: 0.9rem;
-    }
-  </style>
 </BaseLayout>

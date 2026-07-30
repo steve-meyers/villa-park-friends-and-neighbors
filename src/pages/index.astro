@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -8,33 +9,34 @@ const posts = (await getCollection('blog'))
 ---
 
 <BaseLayout title="Home">
-  <h1>Maple Street Neighborhood</h1>
+  <h1>Villa Park Friends and Neighbors</h1>
+  <p class="text-xl font-heading text-gold-dark">
+    Building community, taking action, and celebrating the Villa Park neighborhood.
+  </p>
   <p>News, updates, and resources for our neighborhood — maintained by volunteers.</p>
 
   <h2>Latest Updates</h2>
   {posts.length === 0 && <p>No posts yet — check back soon.</p>}
-  <ul class="post-list">
+  <ul class="list-none p-0 space-y-5">
     {posts.map((post) => (
-      <li>
+      <li class="card">
+        {post.data.image && (
+          <img
+            src={post.data.image}
+            alt=""
+            class="w-full h-48 object-cover rounded-xl mb-4"
+            loading="lazy"
+          />
+        )}
         <a href={`/blog/${post.id}`}>{post.data.title}</a>
-        <div class="meta">{post.data.date.toLocaleDateString()}</div>
-        {post.data.summary && <p>{post.data.summary}</p>}
+        <div class="text-neutral-500 text-sm">{post.data.date.toLocaleDateString()}</div>
+        {post.data.summary && <p class="mb-0 mt-2">{post.data.summary}</p>}
       </li>
     ))}
   </ul>
-  <p><a href="/blog">See all posts &rarr;</a></p>
+  <p>
+    <a href="/blog" class="btn">See all posts &rarr;</a>
+  </p>
 
-  <style>
-    .post-list {
-      list-style: none;
-      padding: 0;
-    }
-    .post-list li {
-      margin-bottom: 1.5rem;
-    }
-    .meta {
-      color: #6b6b6b;
-      font-size: 0.9rem;
-    }
-  </style>
+  <NewsletterSignup class="mt-8" />
 </BaseLayout>

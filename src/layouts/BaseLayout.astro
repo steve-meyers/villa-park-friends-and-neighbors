@@ -1,9 +1,16 @@
 ---
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
 interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+
+const circles = (await getCollection('circles')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
 ---
 
 <!doctype html>
@@ -11,96 +18,49 @@ const { title } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} | Maple Street Neighborhood</title>
+    <title>{title} | Villa Park Friends and Neighbors</title>
   </head>
-  <body>
-    <header class="site-header">
-      <a class="brand" href="/">Maple Street Neighborhood</a>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/blog">Blog</a>
-        <a href="/resources">Resources</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
+  <body class="min-h-screen flex flex-col">
+    <header class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 bg-teal">
+      <a href="/" class="font-heading font-bold text-lg text-white no-underline hover:text-white"
+        >🏡 Villa Park Friends and Neighbors</a
+      >
+      <nav class="flex flex-wrap items-center gap-5">
+        <a href="/" class="text-white font-semibold no-underline hover:text-gold">Home</a>
+        <a href="/blog" class="text-white font-semibold no-underline hover:text-gold">Blog</a>
+        <details class="relative">
+          <summary
+            class="text-white font-semibold no-underline hover:text-gold cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden"
+          >
+            Circles ▾
+          </summary>
+          <div class="absolute left-0 mt-2 min-w-56 bg-white rounded-xl shadow-lg py-2 z-20">
+            {circles.map((circle) => (
+              <a
+                href={`/circles/${circle.id}`}
+                class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
+              >
+                {circle.data.title}
+              </a>
+            ))}
+          </div>
+        </details>
+        <a href="/resources" class="text-white font-semibold no-underline hover:text-gold"
+          >Resources</a
+        >
+        <a href="/about" class="text-white font-semibold no-underline hover:text-gold">About</a>
+        <a href="/contact" class="text-white font-semibold no-underline hover:text-gold"
+          >Contact</a
+        >
       </nav>
     </header>
 
-    <main>
+    <main class="flex-1 w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
       <slot />
     </main>
 
-    <footer class="site-footer">
-      <p>&copy; {new Date().getFullYear()} Maple Street Neighborhood</p>
+    <footer class="text-center text-teal-dark text-sm py-6 bg-gold">
+      <p>&copy; {new Date().getFullYear()} Villa Park Friends and Neighbors</p>
     </footer>
-
-    <style>
-      :root {
-        --max-width: 42rem;
-        --accent: #2f5233;
-        --text: #1a1a1a;
-        --muted: #6b6b6b;
-        --border: #e2e2e2;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        color: var(--text);
-        line-height: 1.6;
-      }
-
-      .site-header {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .brand {
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      nav {
-        display: flex;
-        gap: 1.25rem;
-      }
-
-      nav a {
-        color: var(--text);
-        text-decoration: none;
-      }
-
-      nav a:hover {
-        color: var(--accent);
-      }
-
-      main {
-        max-width: var(--max-width);
-        margin: 0 auto;
-        padding: 2rem 1.5rem 4rem;
-      }
-
-      .site-footer {
-        text-align: center;
-        color: var(--muted);
-        font-size: 0.9rem;
-        padding: 1.5rem;
-        border-top: 1px solid var(--border);
-      }
-
-      a {
-        color: var(--accent);
-      }
-    </style>
   </body>
 </html>

@@ -8,6 +8,7 @@ const blog = defineCollection({
     date: z.date(),
     author: z.string().default('Neighborhood Team'),
     summary: z.string().optional(),
+    image: z.string().optional(),
   }),
 });
 
@@ -27,4 +28,11 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { blog, resources, pages };
+const circles = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/circles' }),
+  schema: z.object({
+    title: z.string(),
+  }),
+});
+
+export const collections = { blog, resources, pages, circles };
