@@ -6,11 +6,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <h1>Events</h1>
   <p>Upcoming neighborhood events, meetups, and circle gatherings.</p>
 
-  <div class="card">
-    <h3 class="mb-1">Calendar Coming Soon</h3>
-    <p class="mb-0">
-      We're setting up a shared calendar so you can see what's happening and add events to your
-      own. Check back soon!
-    </p>
+  <div class="card overflow-hidden p-0">
+    <iframe
+      src="https://calendar.google.com/calendar/embed?src=0ce3a25e6fd955c22169b082528dc03ccdf62b9e88f3e9ba1c4fff8c61a8ac9a%40group.calendar.google.com&ctz=America%2FDenver"
+      style="border: 0"
+      width="100%"
+      height="600"
+      frameborder="0"
+      scrolling="no"
+      title="Villa Park Friends and Neighbors events calendar"
+    >
+    </iframe>
   </div>
+
+  <p class="mt-6">
+    Have an event you'd like added to the calendar? Reach out on the{' '}
+    <a href="/contact">Contact</a> page.
+  </p>
 </BaseLayout>
