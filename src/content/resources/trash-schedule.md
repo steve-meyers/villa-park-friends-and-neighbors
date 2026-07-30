@@ -1,7 +1,7 @@
 ---
-title: Trash & Recycling Pickup Schedule
-url: https://example.com/trash-schedule
+title: City Services & Info
+url: https://www.denvergov.org/Online-Services-Hub
 order: 1
 ---
 
-Trash is collected every Tuesday. Recycling is collected every other Wednesday — check the city calendar for exact dates.
+Trash and recycling pickup schedules, permits, bill pay, and other city services are all available through Denver's Online Services Hub.

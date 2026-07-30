@@ -2,4 +2,6 @@
 title: Green Team/Beautification
 ---
 
-This circle is just getting started. Details on what we're working on will go here soon — check back, or reach out on the [Contact](/contact) page if you'd like to help get it going.
+This circle focuses on keeping our neighborhood clean and green. One great way to get involved: [Gulch Garbage Grabbers](https://gulchgarbagegrabbers.com/) hosts weekly cleanups of the Lakewood Gulch greenspace every Tuesday evening (spring through fall) — all equipment provided, with social time at a local brewery afterward.
+
+Have other ideas for this circle? Reach out on the [Contact](/contact) page.
