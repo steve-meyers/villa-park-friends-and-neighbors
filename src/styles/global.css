@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grandstander:wght@600;700&family=Nunito:wght@400;600;700&display=swap');
 @import 'tailwindcss';
 
 @theme {
@@ -11,7 +11,7 @@
   --color-gold-ink: #7d5f14;
   --color-ink: #3a2f10;
   --color-cream: #fffaf0;
-  --font-heading: 'Anton', 'Nunito', system-ui, sans-serif;
+  --font-heading: 'Grandstander', 'Nunito', system-ui, sans-serif;
   --font-body: 'Nunito', system-ui, sans-serif;
 }
 
