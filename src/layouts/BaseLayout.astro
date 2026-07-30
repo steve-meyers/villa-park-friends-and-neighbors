@@ -1,0 +1,106 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | Maple Street Neighborhood</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/">Maple Street Neighborhood</a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/resources">Resources</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; {new Date().getFullYear()} Maple Street Neighborhood</p>
+    </footer>
+
+    <style>
+      :root {
+        --max-width: 42rem;
+        --accent: #2f5233;
+        --text: #1a1a1a;
+        --muted: #6b6b6b;
+        --border: #e2e2e2;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      .site-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .brand {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      nav {
+        display: flex;
+        gap: 1.25rem;
+      }
+
+      nav a {
+        color: var(--text);
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        color: var(--accent);
+      }
+
+      main {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 2rem 1.5rem 4rem;
+      }
+
+      .site-footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+
+      a {
+        color: var(--accent);
+      }
+    </style>
+  </body>
+</html>

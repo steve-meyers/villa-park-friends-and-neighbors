@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const resources = (await getCollection('resources')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const rendered = await Promise.all(resources.map((r) => render(r)));
+---
+
+<BaseLayout title="Resources">
+  <h1>Resources</h1>
+  <p>Handy links and information for the neighborhood.</p>
+
+  {resources.map((resource, i) => {
+    const { Content } = rendered[i];
+    return (
+      <section class="resource">
+        <h2>
+          {resource.data.url ? (
+            <a href={resource.data.url}>{resource.data.title}</a>
+          ) : (
+            resource.data.title
+          )}
+        </h2>
+        <Content />
+      </section>
+    );
+  })}
+
+  <style>
+    .resource {
+      border-bottom: 1px solid #e2e2e2;
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .resource h2 {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</BaseLayout>

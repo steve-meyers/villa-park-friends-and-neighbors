@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="Blog">
+  <h1>Blog</h1>
+  {posts.length === 0 && <p>No posts yet — check back soon.</p>}
+  <ul class="post-list">
+    {posts.map((post) => (
+      <li>
+        <a href={`/blog/${post.id}`}>{post.data.title}</a>
+        <div class="meta">
+          {post.data.date.toLocaleDateString()} &middot; {post.data.author}
+        </div>
+        {post.data.summary && <p>{post.data.summary}</p>}
+      </li>
+    ))}
+  </ul>
+
+  <style>
+    .post-list {
+      list-style: none;
+      padding: 0;
+    }
+    .post-list li {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #e2e2e2;
+      padding-bottom: 1.5rem;
+    }
+    .meta {
+      color: #6b6b6b;
+      font-size: 0.9rem;
+    }
+  </style>
+</BaseLayout>
