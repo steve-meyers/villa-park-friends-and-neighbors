@@ -11,7 +11,7 @@ const posts = (await getCollection('blog'))
 
 <BaseLayout title="Home">
   <h1>Villa Park Friends and Neighbors</h1>
-  <p class="text-xl font-heading text-gold-dark">
+  <p class="text-xl font-heading text-gold-ink">
     Building community, taking action, and celebrating the Villa Park neighborhood.
   </p>
   <p>News, updates, and resources for our neighborhood — maintained by volunteers.</p>
@@ -39,7 +39,7 @@ const posts = (await getCollection('blog'))
     <a href="/blog" class="btn">See all posts &rarr;</a>
   </p>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8">
+  <div class="flex flex-col gap-5 mt-8">
     <NewsletterSignup />
     <DiscordInvite />
   </div>

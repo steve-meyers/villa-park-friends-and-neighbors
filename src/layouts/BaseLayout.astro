@@ -21,17 +21,17 @@ const circles = (await getCollection('circles')).sort((a, b) =>
     <title>{title} | Villa Park Friends and Neighbors</title>
   </head>
   <body class="min-h-screen flex flex-col">
-    <header class="flex items-center justify-between gap-4 px-6 py-4 bg-teal">
+    <header class="flex items-center justify-between gap-4 px-6 py-4 bg-teal-header">
       <a href="/" class="font-heading font-bold text-lg text-white no-underline hover:text-white"
         >🏡 Villa Park Friends and Neighbors</a
       >
 
       <nav class="hidden sm:flex flex-wrap items-center gap-5">
-        <a href="/" class="text-white font-semibold no-underline hover:text-gold">Home</a>
-        <a href="/blog" class="text-white font-semibold no-underline hover:text-gold">Blog</a>
+        <a href="/" class="text-white font-semibold no-underline hover:underline focus-visible:underline">Home</a>
+        <a href="/blog" class="text-white font-semibold no-underline hover:underline focus-visible:underline">Blog</a>
         <details class="relative">
           <summary
-            class="text-white font-semibold no-underline hover:text-gold cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden"
+            class="text-white font-semibold no-underline hover:underline focus-visible:underline cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden"
           >
             Circles ▾
           </summary>
@@ -46,11 +46,11 @@ const circles = (await getCollection('circles')).sort((a, b) =>
             ))}
           </div>
         </details>
-        <a href="/resources" class="text-white font-semibold no-underline hover:text-gold"
+        <a href="/resources" class="text-white font-semibold no-underline hover:underline focus-visible:underline"
           >Resources</a
         >
-        <a href="/about" class="text-white font-semibold no-underline hover:text-gold">About</a>
-        <a href="/contact" class="text-white font-semibold no-underline hover:text-gold"
+        <a href="/about" class="text-white font-semibold no-underline hover:underline focus-visible:underline">About</a>
+        <a href="/contact" class="text-white font-semibold no-underline hover:underline focus-visible:underline"
           >Contact</a
         >
       </nav>
@@ -105,7 +105,7 @@ const circles = (await getCollection('circles')).sort((a, b) =>
       <slot />
     </main>
 
-    <footer class="text-center text-teal-dark text-sm py-6 bg-gold">
+    <footer class="text-center text-ink text-sm py-6 bg-gold">
       <p>&copy; {new Date().getFullYear()} Villa Park Friends and Neighbors</p>
     </footer>
   </body>

@@ -4,8 +4,11 @@
 @theme {
   --color-teal: #7bb5b2;
   --color-teal-dark: #4c8783;
+  --color-teal-header: #3f7a76;
   --color-gold: #edd286;
   --color-gold-dark: #d9b95c;
+  --color-gold-ink: #7d5f14;
+  --color-ink: #3a2f10;
   --color-cream: #fffaf0;
   --font-heading: 'Baloo 2', 'Nunito', system-ui, sans-serif;
   --font-body: 'Nunito', system-ui, sans-serif;
@@ -62,7 +65,7 @@
 
 @layer components {
   .btn {
-    @apply inline-block font-body font-bold bg-gold text-[#3a2f10] rounded-full px-6 py-2.5 no-underline transition-all hover:bg-gold-dark hover:-translate-y-0.5;
+    @apply inline-block font-body font-bold bg-gold text-ink rounded-full px-6 py-2.5 no-underline transition-all hover:bg-gold-dark hover:-translate-y-0.5;
   }
 
   .card {
