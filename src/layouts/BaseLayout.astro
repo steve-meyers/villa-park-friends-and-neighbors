@@ -21,11 +21,12 @@ const circles = (await getCollection('circles')).sort((a, b) =>
     <title>{title} | Villa Park Friends and Neighbors</title>
   </head>
   <body class="min-h-screen flex flex-col">
-    <header class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 bg-teal">
+    <header class="flex items-center justify-between gap-4 px-6 py-4 bg-teal">
       <a href="/" class="font-heading font-bold text-lg text-white no-underline hover:text-white"
         >🏡 Villa Park Friends and Neighbors</a
       >
-      <nav class="flex flex-wrap items-center gap-5">
+
+      <nav class="hidden sm:flex flex-wrap items-center gap-5">
         <a href="/" class="text-white font-semibold no-underline hover:text-gold">Home</a>
         <a href="/blog" class="text-white font-semibold no-underline hover:text-gold">Blog</a>
         <details class="relative">
@@ -53,6 +54,51 @@ const circles = (await getCollection('circles')).sort((a, b) =>
           >Contact</a
         >
       </nav>
+
+      <details class="sm:hidden relative">
+        <summary
+          class="text-white text-2xl leading-none cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden px-2 py-1"
+          aria-label="Menu"
+        >
+          ☰
+        </summary>
+        <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg py-2 z-20 flex flex-col">
+          <a href="/" class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
+            >Home</a
+          >
+          <a
+            href="/blog"
+            class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
+            >Blog</a
+          >
+          <span class="px-4 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-neutral-400"
+            >Circles</span
+          >
+          {circles.map((circle) => (
+            <a
+              href={`/circles/${circle.id}`}
+              class="block px-4 py-2 pl-6 text-teal-dark text-sm no-underline hover:bg-teal/10"
+            >
+              {circle.data.title}
+            </a>
+          ))}
+          <a
+            href="/resources"
+            class="block px-4 py-2 mt-1 text-teal-dark font-medium no-underline hover:bg-teal/10"
+            >Resources</a
+          >
+          <a
+            href="/about"
+            class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
+            >About</a
+          >
+          <a
+            href="/contact"
+            class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
+            >Contact</a
+          >
+        </div>
+      </details>
     </header>
 
     <main class="flex-1 w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
