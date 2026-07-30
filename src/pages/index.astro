@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+import DiscordInvite from '../components/DiscordInvite.astro';
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -38,5 +39,8 @@ const posts = (await getCollection('blog'))
     <a href="/blog" class="btn">See all posts &rarr;</a>
   </p>
 
-  <NewsletterSignup class="mt-8" />
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8">
+    <NewsletterSignup />
+    <DiscordInvite />
+  </div>
 </BaseLayout>

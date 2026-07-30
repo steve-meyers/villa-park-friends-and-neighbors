@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
+import DiscordInvite from '../components/DiscordInvite.astro';
 ---
 
 <BaseLayout title="Contact">
@@ -36,5 +37,8 @@ import NewsletterSignup from '../components/NewsletterSignup.astro';
     <button type="submit" class="btn mt-4 self-start">Send</button>
   </form>
 
-  <NewsletterSignup class="mt-10" />
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-10">
+    <NewsletterSignup />
+    <DiscordInvite />
+  </div>
 </BaseLayout>
