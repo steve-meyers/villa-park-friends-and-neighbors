@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const items = (await getCollection('news')).sort((a, b) => a.data.order - b.data.order);
+const rendered = await Promise.all(items.map((item) => render(item)));
+
+const groups: { category: string; items: typeof items }[] = [];
+for (const item of items) {
+  const last = groups[groups.length - 1];
+  if (last && last.category === item.data.category) {
+    last.items.push(item);
+  } else {
+    groups.push({ category: item.data.category, items: [item] });
+  }
+}
+---
+
+<BaseLayout title="News">
+  <h1>News</h1>
+  <p>What's happening in and around Villa Park, curated from local coverage.</p>
+
+  {groups.map((group) => (
+    <>
+      <h2>{group.category}</h2>
+      <div class="space-y-5 mb-8">
+        {group.items.map((item) => {
+          const index = items.indexOf(item);
+          const { Content } = rendered[index];
+          return (
+            <section class="card">
+              <h3 class="text-lg mb-2">
+                <a href={item.data.url} target="_blank" rel="noopener noreferrer">
+                  {item.data.title}
+                </a>
+              </h3>
+              <div class="[&_p:last-child]:mb-0">
+                <Content />
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </>
+  ))}
+</BaseLayout>

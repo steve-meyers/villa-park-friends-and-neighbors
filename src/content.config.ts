@@ -35,4 +35,14 @@ const circles = defineCollection({
   }),
 });
 
-export const collections = { blog, resources, pages, circles };
+const news = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
+  schema: z.object({
+    title: z.string(),
+    url: z.string().url(),
+    category: z.string(),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { blog, resources, pages, circles, news };

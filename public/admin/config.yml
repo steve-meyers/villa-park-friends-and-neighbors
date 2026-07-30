@@ -52,3 +52,19 @@ collections:
     fields:
       - { label: "Name", name: "title", widget: "string" }
       - { label: "Description", name: "body", widget: "markdown" }
+
+  - name: "news"
+    label: "News"
+    folder: "src/content/news"
+    create: true
+    slug: "{{slug}}"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Link", name: "url", widget: "string" }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options: ["Community Action", "Green Space", "Parks", "Neighborhood Profile"]
+      - { label: "Display Order", name: "order", widget: "number", default: 0 }
+      - { label: "Blurb", name: "body", widget: "markdown" }
