@@ -71,11 +71,15 @@ collections:
 
   - name: "gallery"
     label: "About Page Photos"
-    folder: "src/content/gallery"
-    create: true
-    slug: "{{slug}}"
-    format: "frontmatter"
-    fields:
-      - { label: "Photo", name: "image", widget: "image" }
-      - { label: "Alt Text (for accessibility)", name: "alt", widget: "string", required: false }
-      - { label: "Display Order", name: "order", widget: "number", default: 0 }
+    files:
+      - name: "photos"
+        label: "Around the Neighborhood Gallery"
+        file: "src/content/gallery/photos.md"
+        fields:
+          - label: "Photos"
+            name: "photos"
+            widget: "list"
+            summary: "{{fields.alt}}"
+            fields:
+              - { label: "Photo", name: "image", widget: "image" }
+              - { label: "Alt Text (for accessibility)", name: "alt", widget: "string", required: false }

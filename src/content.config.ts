@@ -48,9 +48,14 @@ const news = defineCollection({
 const gallery = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/gallery' }),
   schema: z.object({
-    image: z.string(),
-    alt: z.string().default(''),
-    order: z.number().default(0),
+    photos: z
+      .array(
+        z.object({
+          image: z.string(),
+          alt: z.string().default(''),
+        })
+      )
+      .default([]),
   }),
 });
 
