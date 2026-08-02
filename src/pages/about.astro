@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { optimizedImage } from '../lib/image';
 
 const page = await getEntry('pages', 'about');
 const { Content } = await render(page!);
@@ -8,6 +9,8 @@ const { Content } = await render(page!);
 const circles = (await getCollection('circles')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title)
 );
+
+const photos = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout title="About">
@@ -33,6 +36,24 @@ const circles = (await getCollection('circles')).sort((a, b) =>
     Have an idea for a new circle, or want to get involved in one of these? Reach out on the{' '}
     <a href="/contact">Contact</a> page.
   </p>
+
+  {photos.length > 0 && (
+    <>
+      <h2>Around the Neighborhood</h2>
+      <ul class="flex flex-wrap justify-center gap-4 list-none pl-0 mb-4">
+        {photos.map((photo) => (
+          <li class="mb-0">
+            <img
+              src={optimizedImage(photo.data.image, 300)}
+              alt={photo.data.alt}
+              class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-teal-deep"
+              loading="lazy"
+            />
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
 </BaseLayout>
 
 <style>

@@ -45,4 +45,13 @@ const news = defineCollection({
   }),
 });
 
-export const collections = { blog, resources, pages, circles, news };
+const gallery = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/gallery' }),
+  schema: z.object({
+    image: z.string(),
+    alt: z.string().default(''),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { blog, resources, pages, circles, news, gallery };

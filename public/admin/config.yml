@@ -68,3 +68,14 @@ collections:
         options: ["Community Action", "Green Space", "Parks", "Neighborhood Profile"]
       - { label: "Display Order", name: "order", widget: "number", default: 0 }
       - { label: "Blurb", name: "body", widget: "markdown" }
+
+  - name: "gallery"
+    label: "About Page Photos"
+    folder: "src/content/gallery"
+    create: true
+    slug: "{{slug}}"
+    format: "frontmatter"
+    fields:
+      - { label: "Photo", name: "image", widget: "image" }
+      - { label: "Alt Text (for accessibility)", name: "alt", widget: "string", required: false }
+      - { label: "Display Order", name: "order", widget: "number", default: 0 }
