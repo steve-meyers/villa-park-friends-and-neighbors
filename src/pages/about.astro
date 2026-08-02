@@ -1,7 +1,7 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { optimizedImage } from '../lib/image';
+import PhotoGallery from '../components/PhotoGallery.astro';
 
 const page = await getEntry('pages', 'about');
 const { Content } = await render(page!);
@@ -38,150 +38,13 @@ const photos = galleryEntry?.data.photos ?? [];
     <a href="/contact">Contact</a> page.
   </p>
 
-  {photos.length > 0 && (
-    <>
-      <h2>Around the Neighborhood</h2>
-      <div class="gallery-track-wrap mb-4">
-        <ul class="gallery-track list-none pl-0">
-          {[...photos, ...photos].map((photo) => (
-            <li class="mb-0 shrink-0">
-              <button
-                type="button"
-                class="gallery-photo-btn"
-                data-full={optimizedImage(photo.image, 1600)}
-                data-alt={photo.alt}
-              >
-                <img
-                  src={optimizedImage(photo.image, 900)}
-                  alt={photo.alt}
-                  class="w-64 h-64 sm:w-80 sm:h-80 rounded-full object-cover border-4 border-teal-deep"
-                  loading="lazy"
-                />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <dialog id="gallery-lightbox" class="gallery-lightbox">
-        <button type="button" class="gallery-lightbox-close" aria-label="Close">&times;</button>
-        <img id="gallery-lightbox-img" src="" alt="" />
-      </dialog>
-    </>
-  )}
+  <PhotoGallery photos={photos} />
 </BaseLayout>
-
-<script>
-  const dialog = document.getElementById('gallery-lightbox') as HTMLDialogElement | null;
-  const lightboxImg = document.getElementById('gallery-lightbox-img') as HTMLImageElement | null;
-
-  if (dialog && lightboxImg) {
-    document.querySelectorAll<HTMLButtonElement>('.gallery-photo-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        lightboxImg.src = btn.dataset.full ?? '';
-        lightboxImg.alt = btn.dataset.alt ?? '';
-        dialog.showModal();
-      });
-    });
-
-    dialog.querySelector('.gallery-lightbox-close')?.addEventListener('click', () => dialog.close());
-    dialog.addEventListener('click', (event) => {
-      if (event.target === dialog) dialog.close();
-    });
-  }
-</script>
 
 <style>
   @reference '../styles/global.css';
 
   .about-content :global(p:first-of-type) {
     @apply text-xl font-heading text-gold-ink;
-  }
-
-  .gallery-track-wrap {
-    overflow: hidden;
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    padding-inline: 1.5rem;
-  }
-
-  .gallery-track {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    width: max-content;
-    animation: gallery-scroll 40s linear infinite;
-  }
-
-  .gallery-track-wrap:hover .gallery-track {
-    animation-play-state: paused;
-  }
-
-  @keyframes gallery-scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .gallery-track {
-      animation: none;
-    }
-  }
-
-  .gallery-photo-btn {
-    display: block;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    border-radius: 9999px;
-  }
-
-  .gallery-lightbox {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-    border: none;
-    border-radius: 1rem;
-    padding: 0;
-    background: transparent;
-    max-width: min(90vw, 900px);
-    max-height: 90vh;
-  }
-
-  .gallery-lightbox::backdrop {
-    background: rgb(0 0 0 / 0.75);
-  }
-
-  .gallery-lightbox img {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 90vh;
-    object-fit: contain;
-    border-radius: 1rem;
-  }
-
-  .gallery-lightbox-close {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.75rem;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    line-height: 1;
-    cursor: pointer;
-    text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
   }
 </style>

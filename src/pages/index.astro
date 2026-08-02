@@ -1,13 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import DiscordInvite from '../components/DiscordInvite.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
 import { optimizedImage } from '../lib/image';
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
+
+const galleryEntry = await getEntry('gallery', 'photos');
+const photos = galleryEntry?.data.photos ?? [];
 ---
 
 <BaseLayout title="Home">
@@ -58,4 +62,6 @@ const posts = (await getCollection('blog'))
     <NewsletterSignup />
     <DiscordInvite />
   </div>
+
+  <PhotoGallery photos={photos} />
 </BaseLayout>
