@@ -11,7 +11,7 @@ const { photos, heading = 'Around the Neighborhood' } = Astro.props;
 
 {
   photos.length > 0 && (
-    <div class="photo-gallery">
+    <div class="photo-gallery mt-8">
       {heading && <h2>{heading}</h2>}
       <div class="gallery-track-wrap mb-4">
         <ul class="gallery-track list-none pl-0">
@@ -124,8 +124,6 @@ const { photos, heading = 'Around the Neighborhood' } = Astro.props;
     border-radius: 1rem;
     padding: 0;
     background: transparent;
-    max-width: min(90vw, 900px);
-    max-height: 90vh;
   }
 
   .gallery-lightbox::backdrop {
@@ -134,8 +132,9 @@ const { photos, heading = 'Around the Neighborhood' } = Astro.props;
 
   .gallery-lightbox img {
     display: block;
-    width: 100%;
+    width: auto;
     height: auto;
+    max-width: min(90vw, 900px);
     max-height: 90vh;
     object-fit: contain;
     border-radius: 1rem;
