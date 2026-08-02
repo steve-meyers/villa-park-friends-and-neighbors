@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { optimizedImage } from '../../lib/image';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -21,7 +22,12 @@ const { Content } = await render(post);
       {post.data.date.toLocaleDateString()} &middot; {post.data.author}
     </p>
     {post.data.image && (
-      <img src={post.data.image} alt="" class="w-full rounded-xl mb-4" loading="lazy" />
+      <img
+        src={optimizedImage(post.data.image, 1400)}
+        alt=""
+        class="w-full rounded-xl mb-4"
+        loading="lazy"
+      />
     )}
     <Content />
   </article>

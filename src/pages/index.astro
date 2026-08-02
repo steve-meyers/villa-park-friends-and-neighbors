@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NewsletterSignup from '../components/NewsletterSignup.astro';
 import DiscordInvite from '../components/DiscordInvite.astro';
+import { optimizedImage } from '../lib/image';
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -35,7 +36,7 @@ const posts = (await getCollection('blog'))
       <li class="notice odd:-rotate-1 even:rotate-1">
         {post.data.image && (
           <img
-            src={post.data.image}
+            src={optimizedImage(post.data.image, 800)}
             alt=""
             class="w-full h-48 object-cover rounded mb-4"
             loading="lazy"
