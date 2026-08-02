@@ -10,4 +10,4 @@ Why celebrate sunflowers of all things? While sunflowers are [awesome native pla
 
 If that sounds at all like a community you want to be a part of, join us! We have neighbors looking to create spaces for families, neighbors looking to advocate for safer streets, neighbors learning about gardening together, and more. There are so many ways to get involved, even if that just means showing up and enjoying some breakfast with neighbors. We have a newsletter and an active discord so you can find out about future events and other ways to get involved - check out our [Contact Page](https://villa-park-friends-and-neighbors.netlify.app/contact/) for ways to get involved!
 
-![]()
+![](/images/uploads/img_20260801_093851153_hdr.jpg)
