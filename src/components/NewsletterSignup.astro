@@ -11,19 +11,180 @@ const { class: className = '' } = Astro.props;
   <p class="mb-3">
     Subscribe to get new posts and neighborhood news in your inbox. No spam, unsubscribe any time.
   </p>
-  <!-- Placeholder only — not wired up to a real mailing list yet. -->
-  <form class="flex flex-col sm:flex-row gap-2">
-    <input
-      type="email"
-      placeholder="you@example.com"
-      required
-      class="input flex-1 min-w-0 disabled:opacity-60 disabled:cursor-not-allowed"
-      disabled
-      aria-label="Email address"
-    />
-    <button type="submit" class="btn disabled:opacity-60 disabled:cursor-not-allowed" disabled>
-      Subscribe
-    </button>
-  </form>
-  <p class="text-xs text-neutral-500 mt-2 mb-0">Signups are coming soon!</p>
+
+  <div id="mlb2-44411529" class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-44411529">
+    <div class="ml-form-align-center">
+      <div class="ml-form-embedWrapper embedForm">
+        <div class="ml-form-embedBody ml-form-embedBodyDefault row-form">
+          <form
+            class="ml-block-form"
+            action="https://assets.mailerlite.com/jsonp/2551759/forms/194724400652616951/subscribe"
+            data-code=""
+            method="post"
+            target="_blank"
+          >
+            <div class="ml-form-formContent">
+              <div class="ml-form-fieldRow ml-last-item">
+                <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
+                  <input
+                    aria-label="email"
+                    aria-required="true"
+                    type="email"
+                    class="form-control"
+                    data-inputmask=""
+                    name="fields[email]"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <input type="hidden" name="ml-submit" value="1" />
+
+            <div class="ml-form-embedSubmit">
+              <button type="submit" class="primary">Subscribe</button>
+              <button disabled="disabled" style="display: none;" type="button" class="loading">
+                <div class="ml-form-embedSubmitLoad"></div>
+                <span class="sr-only">Loading...</span>
+              </button>
+            </div>
+
+            <input type="hidden" name="anticsrf" value="true" />
+          </form>
+        </div>
+
+        <div class="ml-form-successBody row-success" style="display: none">
+          <div class="ml-form-successContent">
+            <h4>Thank you!</h4>
+            <p class="mb-0">You've been added to the list.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+  @reference '../styles/global.css';
+
+  #mlb2-44411529.ml-form-embedContainer {
+    display: block;
+    width: 100% !important;
+    margin: 0;
+  }
+
+  #mlb2-44411529 .ml-form-align-center {
+    text-align: left;
+  }
+
+  #mlb2-44411529 .ml-form-embedWrapper.embedForm {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  #mlb2-44411529 .ml-form-embedBody {
+    padding: 0 !important;
+  }
+
+  #mlb2-44411529 form {
+    margin: 0;
+    width: 100%;
+  }
+
+  #mlb2-44411529 .ml-form-formContent {
+    margin: 0 0 0.5rem 0 !important;
+    width: 100%;
+  }
+
+  #mlb2-44411529 .ml-form-fieldRow {
+    margin: 0 !important;
+    width: 100%;
+  }
+
+  #mlb2-44411529 .ml-form-fieldRow input {
+    @apply border-2 border-[#e9e0c8] rounded-lg font-body;
+    background-color: white !important;
+    color: var(--color-ink) !important;
+    border-radius: 0.5rem !important;
+    font-size: 0.95rem !important;
+    line-height: 1.4 !important;
+    padding: 0.6rem 0.75rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    height: auto;
+    margin: 0 !important;
+  }
+
+  #mlb2-44411529 .ml-form-fieldRow input:focus {
+    outline: none !important;
+    border-color: var(--color-teal) !important;
+  }
+
+  #mlb2-44411529 .ml-form-fieldRow input::placeholder {
+    color: #9a9284;
+  }
+
+  #mlb2-44411529 .ml-form-embedSubmit {
+    margin: 0.5rem 0 0 0 !important;
+    float: none;
+    width: 100%;
+  }
+
+  #mlb2-44411529 .ml-form-embedSubmit button.primary {
+    @apply font-body font-extrabold uppercase tracking-wide;
+    background-color: var(--color-gold) !important;
+    border: none !important;
+    border-radius: 0.375rem !important;
+    box-shadow: none !important;
+    color: var(--color-ink) !important;
+    cursor: pointer;
+    font-size: 0.875rem !important;
+    line-height: 1.4 !important;
+    height: auto;
+    padding: 0.65rem 1.5rem !important;
+    width: 100%;
+    box-sizing: border-box !important;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+  }
+
+  #mlb2-44411529 .ml-form-embedSubmit button.primary:hover {
+    background-color: var(--color-gold-dark) !important;
+    transform: translateY(-1px);
+  }
+
+  #mlb2-44411529 .ml-form-successContent {
+    text-align: left;
+    margin: 0;
+  }
+
+  #mlb2-44411529 .ml-form-successContent h4 {
+    @apply font-heading text-teal-dark uppercase;
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem 0;
+  }
+
+  #mlb2-44411529 .ml-form-successContent p {
+    @apply font-body;
+    font-size: 0.9rem;
+    color: var(--color-ink);
+  }
+
+  #mlb2-44411529 .ml-error input {
+    border-color: #dc2626 !important;
+  }
+</style>
+
+<script is:inline>
+  function ml_webform_success_44411529() {
+    var $ = ml_jQuery || jQuery;
+    $('.ml-subscribe-form-44411529 .row-success').show();
+    $('.ml-subscribe-form-44411529 .row-form').hide();
+  }
+</script>
+<script is:inline src="https://groot.mailerlite.com/js/w/webforms.min.js?v83147fa8ce2d95cb73ece7f28b469519"
+></script>
+<script is:inline>
+  fetch('https://assets.mailerlite.com/jsonp/2551759/forms/194724400652616951/takel');
+</script>
