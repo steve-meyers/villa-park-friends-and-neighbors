@@ -116,11 +116,19 @@ const { photos, heading = 'Around the Neighborhood' } = Astro.props;
     wrap.addEventListener('pointerdown', pause);
     wrap.addEventListener('pointerup', scheduleResume);
     wrap.addEventListener('pointercancel', scheduleResume);
-    wrap.addEventListener('mouseenter', pause);
-    wrap.addEventListener('mouseleave', scheduleResume);
     wrap.addEventListener('touchstart', pause, { passive: true });
     wrap.addEventListener('touchend', scheduleResume, { passive: true });
     wrap.addEventListener('scroll', loopIfNeeded, { passive: true });
+
+    // Mobile browsers can fire a synthetic mouseenter after a tap with no
+    // matching mouseleave (no real mouse to "leave" with), which would pause
+    // the carousel forever. Only wire up hover-based pausing on devices that
+    // actually have a real, precise pointer (i.e. a mouse).
+    const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (supportsHover) {
+      wrap.addEventListener('mouseenter', pause);
+      wrap.addEventListener('mouseleave', scheduleResume);
+    }
 
     requestAnimationFrame(tick);
   });
