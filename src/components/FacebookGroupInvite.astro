@@ -1,0 +1,19 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+const FACEBOOK_GROUP_URL = 'https://www.facebook.com/groups/1980251375833396';
+---
+
+<div class={`card ${className}`}>
+  <h3 class="mb-1">Join Our Facebook Group</h3>
+  <p class="mb-3">
+    A casual place to connect with neighbors and friends of Villa Park and the surrounding
+    neighborhoods.
+  </p>
+  <a href={FACEBOOK_GROUP_URL} target="_blank" rel="noopener noreferrer" class="btn">
+    Join the Group &rarr;
+  </a>
+</div>
