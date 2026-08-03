@@ -63,84 +63,12 @@ const { photos, heading = 'Around the Neighborhood' } = Astro.props;
     dialog.addEventListener('click', (event) => {
       if (event.target === dialog) dialog.close();
     });
-
-    const wrap = root.querySelector<HTMLElement>('.gallery-track-wrap');
-    const track = root.querySelector<HTMLElement>('.gallery-track');
-    if (!wrap || !track) return;
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const PIXELS_PER_SECOND = 30;
-    const RESUME_DELAY_MS = 2500;
-
-    let paused = prefersReducedMotion;
-    let resumeTimer: ReturnType<typeof setTimeout> | null = null;
-    let lastFrameTime: number | null = null;
-
-    function loopIfNeeded() {
-      const halfWidth = track!.scrollWidth / 2;
-      if (wrap!.scrollLeft >= halfWidth) {
-        wrap!.scrollLeft -= halfWidth;
-      } else if (wrap!.scrollLeft <= 0) {
-        wrap!.scrollLeft += halfWidth;
-      }
-    }
-
-    function tick(time: number) {
-      if (!paused) {
-        if (lastFrameTime !== null) {
-          const deltaSeconds = (time - lastFrameTime) / 1000;
-          wrap!.scrollLeft += PIXELS_PER_SECOND * deltaSeconds;
-          loopIfNeeded();
-        }
-        lastFrameTime = time;
-      } else {
-        lastFrameTime = null;
-      }
-      requestAnimationFrame(tick);
-    }
-
-    function pause() {
-      paused = true;
-      if (resumeTimer) clearTimeout(resumeTimer);
-      resumeTimer = null;
-    }
-
-    function scheduleResume() {
-      if (prefersReducedMotion) return;
-      if (resumeTimer) clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(() => {
-        paused = false;
-      }, RESUME_DELAY_MS);
-    }
-
-    wrap.addEventListener('pointerdown', pause);
-    wrap.addEventListener('pointerup', scheduleResume);
-    wrap.addEventListener('pointercancel', scheduleResume);
-    wrap.addEventListener('touchstart', pause, { passive: true });
-    wrap.addEventListener('touchend', scheduleResume, { passive: true });
-    wrap.addEventListener('scroll', loopIfNeeded, { passive: true });
-
-    // Mobile browsers can fire a synthetic mouseenter after a tap with no
-    // matching mouseleave (no real mouse to "leave" with), which would pause
-    // the carousel forever. Only wire up hover-based pausing on devices that
-    // actually have a real, precise pointer (i.e. a mouse).
-    const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (supportsHover) {
-      wrap.addEventListener('mouseenter', pause);
-      wrap.addEventListener('mouseleave', scheduleResume);
-    }
-
-    requestAnimationFrame(tick);
   });
 </script>
 
 <style>
   .gallery-track-wrap {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
+    overflow: hidden;
     width: 100vw;
     position: relative;
     left: 50%;
@@ -150,15 +78,33 @@ const { photos, heading = 'Around the Neighborhood' } = Astro.props;
     padding-inline: 1.5rem;
   }
 
-  .gallery-track-wrap::-webkit-scrollbar {
-    display: none;
-  }
-
   .gallery-track {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     width: max-content;
+    animation: gallery-scroll 40s linear infinite;
+  }
+
+  @keyframes gallery-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .gallery-track-wrap:hover .gallery-track {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-track {
+      animation: none;
+    }
   }
 
   .gallery-photo-btn {
