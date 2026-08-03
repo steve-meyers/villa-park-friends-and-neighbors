@@ -6,6 +6,7 @@ import { rehypeOptimizeImages } from './src/lib/rehype-optimize-images.mjs';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://villaparkfans.com',
   vite: {
     plugins: [tailwindcss()]
   },
