@@ -20,57 +20,105 @@ const circles = (await getCollection('circles')).sort((a, b) =>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title} | Villa Park Friends and Neighbors</title>
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = stored ? stored === 'dark' : prefersDark;
+        document.documentElement.classList.toggle('dark', isDark);
+      })();
+    </script>
   </head>
   <body class="min-h-screen flex flex-col overflow-x-hidden">
-    <header class="flex items-center justify-between gap-4 px-6 py-4 bg-teal-header">
+    <header
+      id="site-header"
+      class="sticky top-0 z-30 flex items-center justify-between gap-4 px-6 py-4 bg-teal-header shadow-md transition-[background-color] duration-150"
+    >
       <a
         href="/"
         class="font-heading text-base text-white no-underline hover:text-white uppercase tracking-wider"
-        >🏡 Villa Park Friends and Neighbors</a
+        >🏡 Villa Park FANs</a
       >
 
-      <nav class="hidden sm:flex flex-wrap items-center gap-5">
-        <a href="/" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Home</a>
-        <a href="/blog" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Blog</a>
-        <a href="/events" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Events</a>
-        <a href="/news" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">News</a>
-        <details class="relative group">
-          <summary
-            class="block font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden"
+      <div class="flex items-center gap-4">
+        <nav class="hidden sm:flex flex-wrap items-center gap-5">
+          <a href="/" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Home</a>
+          <a href="/blog" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Blog</a>
+          <a href="/events" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Events</a>
+          <a href="/news" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">News</a>
+          <details class="relative group">
+            <summary
+              class="block font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden"
+            >
+              <span
+                class="underline-offset-4 decoration-gold group-hover:underline group-focus-within:underline"
+                >Circles</span
+              > ▾
+            </summary>
+            <div class="absolute left-0 mt-2 min-w-56 bg-white dark:bg-night-surface rounded-xl shadow-lg py-2 z-20">
+              {circles.map((circle) => (
+                <a
+                  href={`/circles/${circle.id}`}
+                  class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
+                >
+                  {circle.data.title}
+                </a>
+              ))}
+            </div>
+          </details>
+          <a href="/resources" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline"
+            >Resources</a
           >
-            <span
-              class="underline-offset-4 decoration-gold group-hover:underline group-focus-within:underline"
-              >Circles</span
-            > ▾
-          </summary>
-          <div class="absolute left-0 mt-2 min-w-56 bg-white rounded-xl shadow-lg py-2 z-20">
-            {circles.map((circle) => (
-              <a
-                href={`/circles/${circle.id}`}
-                class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
-              >
-                {circle.data.title}
-              </a>
-            ))}
-          </div>
-        </details>
-        <a href="/resources" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline"
-          >Resources</a
-        >
-        <a href="/about" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">About</a>
-        <a href="/contact" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline"
-          >Contact</a
-        >
-      </nav>
+          <a href="/about" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">About</a>
+          <a href="/contact" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline"
+            >Contact</a
+          >
+        </nav>
 
-      <details class="sm:hidden relative">
-        <summary
-          class="text-white text-4xl leading-none cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden px-2 py-1"
-          aria-label="Menu"
+        <button
+          type="button"
+          class="theme-toggle-btn hidden sm:inline-flex items-center gap-0.5 bg-black/15 rounded-full p-0.5 cursor-pointer shrink-0"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
         >
-          ☰
-        </summary>
-        <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg py-2 z-20 flex flex-col">
+          <span class="theme-option-light flex items-center justify-center w-6 h-6 rounded-full text-xs leading-none transition-all bg-white/25 dark:bg-transparent dark:opacity-40"
+            >☀️</span
+          >
+          <span class="theme-option-dark flex items-center justify-center w-6 h-6 rounded-full text-xs leading-none transition-all opacity-40 dark:opacity-100 dark:bg-white/25"
+            >🌙</span
+          >
+        </button>
+
+        <div class="sm:hidden flex items-center gap-1">
+        <button
+          type="button"
+          class="theme-toggle-btn inline-flex items-center gap-0.5 bg-black/15 rounded-full p-1 cursor-pointer"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
+        >
+          <span class="theme-option-light flex items-center justify-center w-8 h-8 rounded-full text-sm leading-none transition-all bg-white/25 dark:bg-transparent dark:opacity-40"
+            >☀️</span
+          >
+          <span class="theme-option-dark flex items-center justify-center w-8 h-8 rounded-full text-sm leading-none transition-all opacity-40 dark:opacity-100 dark:bg-white/25"
+            >🌙</span
+          >
+        </button>
+
+        <details class="relative">
+          <summary
+            class="flex items-center justify-center w-10 h-10 text-white cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden bg-black/15 rounded-full"
+            aria-label="Menu"
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M1 4H17M1 9H17M1 14H17"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              ></path>
+            </svg>
+          </summary>
+          <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-night-surface rounded-xl shadow-lg py-2 z-20 flex flex-col">
           <a href="/" class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
             >Home</a
           >
@@ -89,7 +137,8 @@ const circles = (await getCollection('circles')).sort((a, b) =>
             class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
             >News</a
           >
-          <span class="px-4 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-neutral-400"
+          <span
+            class="px-4 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-neutral-400 dark:text-neutral-300"
             >Circles</span
           >
           {circles.map((circle) => (
@@ -115,8 +164,10 @@ const circles = (await getCollection('circles')).sort((a, b) =>
             class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
             >Contact</a
           >
+          </div>
+        </details>
         </div>
-      </details>
+      </div>
     </header>
 
     <main class="flex-1 w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
@@ -135,6 +186,40 @@ const circles = (await getCollection('circles')).sort((a, b) =>
           }
         });
       });
+
+      function syncThemeButtons(theme: string) {
+        document.querySelectorAll('.theme-toggle-btn').forEach((btn) => {
+          btn.setAttribute('aria-pressed', String(theme === 'dark'));
+        });
+      }
+
+      function setTheme(theme: string) {
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+        localStorage.setItem('theme', theme);
+        syncThemeButtons(theme);
+      }
+
+      document.querySelectorAll('.theme-toggle-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+          setTheme(next);
+        });
+      });
+      syncThemeButtons(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+
+      const siteHeader = document.getElementById('site-header');
+      const FADE_DISTANCE = 120;
+      const MIN_OPACITY = 0.82;
+
+      function updateHeaderOpacity() {
+        if (!siteHeader) return;
+        const t = Math.min(window.scrollY / FADE_DISTANCE, 1);
+        const opacity = 1 - t * (1 - MIN_OPACITY);
+        siteHeader.style.backgroundColor = `rgb(63 122 118 / ${opacity})`;
+      }
+
+      updateHeaderOpacity();
+      window.addEventListener('scroll', updateHeaderOpacity, { passive: true });
     </script>
 
     <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

@@ -48,7 +48,7 @@ const photos = galleryEntry?.data.photos ?? [];
           />
         )}
         <a href={`/blog/${post.id}`}>{post.data.title}</a>
-        <div class="text-neutral-500 text-xs font-mono uppercase tracking-wide mt-1">
+        <div class="text-neutral-500 dark:text-neutral-400 text-xs font-mono uppercase tracking-wide mt-1">
           {post.data.date.toLocaleDateString()}
         </div>
         {post.data.summary && <p class="mb-0 mt-2">{post.data.summary}</p>}

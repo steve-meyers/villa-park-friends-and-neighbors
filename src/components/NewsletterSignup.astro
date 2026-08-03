@@ -103,8 +103,8 @@ const { class: className = '' } = Astro.props;
   }
 
   #mlb2-44411529 .ml-form-fieldRow input {
-    @apply border-2 border-[#e9e0c8] rounded-lg font-body;
-    background-color: white !important;
+    @apply border-2 border-[#e9e0c8] dark:border-night-border rounded-lg font-body;
+    background-color: var(--color-cream) !important;
     color: var(--color-ink) !important;
     border-radius: 0.5rem !important;
     font-size: 0.95rem !important;
@@ -124,6 +124,14 @@ const { class: className = '' } = Astro.props;
 
   #mlb2-44411529 .ml-form-fieldRow input::placeholder {
     color: #9a9284;
+  }
+
+  .dark #mlb2-44411529 .ml-form-fieldRow input {
+    color: #f2ece0 !important;
+  }
+
+  .dark #mlb2-44411529 .ml-form-fieldRow input::placeholder {
+    color: #8a8578;
   }
 
   #mlb2-44411529 .ml-form-embedSubmit {
@@ -169,6 +177,10 @@ const { class: className = '' } = Astro.props;
     @apply font-body;
     font-size: 0.9rem;
     color: var(--color-ink);
+  }
+
+  .dark #mlb2-44411529 .ml-form-successContent p {
+    color: #f2ece0;
   }
 
   #mlb2-44411529 .ml-error input {

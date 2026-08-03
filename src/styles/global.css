@@ -1,23 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Grandstander:wght@600;700&family=Nunito:wght@400;600;700&display=swap');
 @import 'tailwindcss';
 
+/* Dark mode is driven by a `.dark` class on <html>, toggled by a small
+   header button (see BaseLayout.astro). A tiny inline script sets that
+   class before first paint based on a saved choice, falling back to the
+   visitor's OS/browser preference when they haven't chosen manually. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-teal: #7bb5b2;
   --color-teal-dark: #4c8783;
   --color-teal-header: #3f7a76;
   --color-teal-deep: #24504c;
+  --color-teal-light: #9fd0cd;
   --color-gold: #edd286;
   --color-gold-dark: #d9b95c;
   --color-gold-ink: #7d5f14;
   --color-ink: #3a2f10;
   --color-cream: #fffaf0;
+  --color-night: #121716;
+  --color-night-surface: #1a2120;
+  --color-night-border: #2b3635;
   --font-heading: 'Grandstander', 'Nunito', system-ui, sans-serif;
   --font-body: 'Nunito', system-ui, sans-serif;
 }
 
+/* Reusing a color token as both a background (e.g. teal-deep on the hero)
+   and foreground (e.g. teal-deep as pill text) means it can't just be
+   swapped globally, so those specific spots get an explicit dark: variant
+   pointing at teal-light instead; everything else redefines its token here
+   and the rest of the site picks it up automatically. */
+:root.dark {
+  --color-cream: var(--color-night);
+  --color-teal-dark: var(--color-teal-light);
+  --color-gold-ink: var(--color-gold);
+}
+
 @layer base {
   body {
-    @apply bg-cream text-neutral-800 font-body leading-relaxed;
+    @apply bg-cream text-neutral-800 dark:text-[#f2ece0] font-body leading-relaxed;
     background-image: radial-gradient(
       circle,
       transparent 0,
@@ -27,6 +48,17 @@
       transparent 48px
     );
     background-size: 110px 110px;
+  }
+
+  .dark body {
+    background-image: radial-gradient(
+      circle,
+      transparent 0,
+      transparent 46px,
+      rgba(255, 255, 255, 0.035) 46px,
+      rgba(255, 255, 255, 0.035) 48px,
+      transparent 48px
+    );
   }
 
   h1,
@@ -79,12 +111,12 @@
   }
 
   .card {
-    @apply bg-white rounded-md border border-[#e9e0c8] px-6 py-5 shadow-sm;
+    @apply bg-white dark:bg-night-surface rounded-md border border-[#e9e0c8] dark:border-night-border px-6 py-5 shadow-sm;
   }
 
   /* Pinned notice card — for post-like list items (blog posts, updates) */
   .notice {
-    @apply bg-white rounded border border-[#e9e0c8] px-6 py-5 shadow-md relative;
+    @apply bg-white dark:bg-night-surface rounded border border-[#e9e0c8] dark:border-night-border px-6 py-5 shadow-md relative;
   }
 
   .notice::before {
@@ -105,6 +137,6 @@
   }
 
   .input {
-    @apply border-2 border-[#e9e0c8] rounded-lg px-3 py-2.5 font-body focus:outline-none focus:border-teal;
+    @apply bg-cream border-2 border-[#e9e0c8] dark:border-night-border dark:text-[#f2ece0] rounded-lg px-3 py-2.5 font-body focus:outline-none focus:border-teal;
   }
 }

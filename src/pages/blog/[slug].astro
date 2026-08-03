@@ -18,7 +18,7 @@ const { Content } = await render(post);
 <BaseLayout title={post.data.title}>
   <article>
     <h1>{post.data.title}</h1>
-    <p class="text-neutral-500 text-sm">
+    <p class="text-neutral-500 dark:text-neutral-400 text-sm">
       {post.data.date.toLocaleDateString()} &middot; {post.data.author}
     </p>
     {post.data.image && (
