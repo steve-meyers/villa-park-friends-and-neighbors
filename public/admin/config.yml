@@ -19,6 +19,16 @@ collections:
       - { label: "Author", name: "author", widget: "string", default: "Neighborhood Team" }
       - { label: "Summary", name: "summary", widget: "text", required: false }
       - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - label: "Circles"
+        name: "circles"
+        widget: "relation"
+        collection: "circles"
+        search_fields: ["title"]
+        display_fields: ["title"]
+        value_field: "{{slug}}"
+        multiple: true
+        required: false
+        hint: "Tag this post with any circles it relates to, so it shows up on their pages."
       - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "resources"

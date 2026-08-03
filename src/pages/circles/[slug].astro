@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { optimizedImage } from '../../lib/image';
 
 export async function getStaticPaths() {
   const circles = await getCollection('circles');
@@ -12,9 +13,38 @@ export async function getStaticPaths() {
 
 const { circle } = Astro.props;
 const { Content } = await render(circle);
+
+const posts = (await getCollection('blog'))
+  .filter((post) => post.data.circles?.includes(circle.id))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <BaseLayout title={circle.data.title}>
   <h1>{circle.data.title}</h1>
   <Content />
+
+  {posts.length > 0 && (
+    <>
+      <h2>Circle Highlights</h2>
+      <ul class="list-none p-0 space-y-6">
+        {posts.map((post) => (
+          <li class="notice odd:-rotate-1 even:rotate-1">
+            {post.data.image && (
+              <img
+                src={optimizedImage(post.data.image, 800)}
+                alt=""
+                class="w-full h-48 object-cover rounded mb-4"
+                loading="lazy"
+              />
+            )}
+            <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            <div class="text-neutral-500 dark:text-neutral-400 text-xs font-mono uppercase tracking-wide mt-1">
+              {post.data.date.toLocaleDateString()}
+            </div>
+            {post.data.summary && <p class="mb-0 mt-2">{post.data.summary}</p>}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
 </BaseLayout>

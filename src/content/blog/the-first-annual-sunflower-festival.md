@@ -3,6 +3,8 @@ title: "The First Annual Sunflower Festival "
 date: 2026-08-02T14:39:00.000-06:00
 author: The Neighborhood Team
 image: /images/uploads/img_20260801_094001654.jpg
+circles:
+  - green-team-beautification
 ---
 On July 31st, 2026, our state was[ just about to celebrate 150 years of statehood](https://www.presidency.ucsb.edu/documents/proclamation-230-admission-colorado-into-the-union). Meanwhile, our Villa Park neighbors were celebrating the very first annual Sunflower Festival! Hosted by the garden leaders at the brand new [Martinez Park Community Garden](https://www.facebook.com/martinezparkgardens/), neighbors, friends, and family gathered for a midsummer party complete with a pancake breakfast, live jazz music, mimosas, and games/activities for kids. 
 

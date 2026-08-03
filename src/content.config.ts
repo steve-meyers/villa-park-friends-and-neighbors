@@ -9,6 +9,7 @@ const blog = defineCollection({
     author: z.string().default('Neighborhood Team'),
     summary: z.string().optional(),
     image: z.string().optional(),
+    circles: z.array(z.string()).optional(),
   }),
 });
 
