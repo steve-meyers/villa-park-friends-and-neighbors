@@ -110,6 +110,10 @@
     @apply inline-block font-body font-extrabold uppercase tracking-wide text-sm bg-gold text-ink rounded px-6 py-2.5 no-underline transition-all hover:bg-gold-dark hover:-translate-y-0.5;
   }
 
+  .btn-primary {
+    @apply inline-block font-body font-extrabold uppercase tracking-wide text-sm bg-teal-header text-white rounded px-6 py-2.5 no-underline transition-all hover:bg-teal-deep hover:-translate-y-0.5;
+  }
+
   .card {
     @apply bg-white dark:bg-night-surface rounded-md border border-[#e9e0c8] dark:border-night-border px-6 py-5 shadow-sm;
   }

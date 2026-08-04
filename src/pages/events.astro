@@ -1,26 +1,253 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  fetchUpcomingEvents,
+  fetchEventsInRange,
+  getEventDayKeys,
+  formatEventDate,
+  denverMidnightIso,
+  eventSlug,
+  CALENDAR_SUBSCRIBE_URL,
+  type CalendarEvent,
+} from '../lib/calendar';
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=60');
+
+const view = Astro.url.searchParams.get('view') === 'calendar' ? 'calendar' : 'list';
+
+const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+const monthHeadingOptions: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
+const timeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'America/Denver',
+});
+const dayKeyFormatter = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Denver' });
+
+let listEvents: CalendarEvent[] = [];
+let loadError = false;
+
+// --- Calendar (month grid) view setup ---
+const monthParam = Astro.url.searchParams.get('month'); // YYYY-MM
+const now = new Date();
+const nowDenverKey = dayKeyFormatter.format(now); // YYYY-MM-DD
+const [nowYear, nowMonth] = nowDenverKey.split('-').map(Number);
+
+let year = nowYear;
+let month = nowMonth; // 1-indexed
+if (monthParam && /^\d{4}-(0[1-9]|1[0-2])$/.test(monthParam)) {
+  const [y, m] = monthParam.split('-').map(Number);
+  year = y;
+  month = m;
+}
+
+const isCurrentMonth = year === nowYear && month === nowMonth;
+
+const firstOfMonth = new Date(Date.UTC(year, month - 1, 1));
+const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+const firstWeekday = firstOfMonth.getUTCDay(); // 0 = Sunday
+
+const gridStartOffset = firstWeekday; // days to back up to Sunday
+const totalCells = Math.ceil((gridStartOffset + daysInMonth) / 7) * 7;
+
+const currentMonthParam = `${year}-${String(month).padStart(2, '0')}`;
+const prevMonthDate = new Date(Date.UTC(year, month - 2, 1));
+const nextMonthDate = new Date(Date.UTC(year, month, 1));
+const prevMonthParam = `${prevMonthDate.getUTCFullYear()}-${String(prevMonthDate.getUTCMonth() + 1).padStart(2, '0')}`;
+const nextMonthParam = `${nextMonthDate.getUTCFullYear()}-${String(nextMonthDate.getUTCMonth() + 1).padStart(2, '0')}`;
+const monthLabel = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(
+  firstOfMonth
+);
+
+type DayCell = { day: number; dateKey: string; inMonth: boolean; events: CalendarEvent[] };
+let weeks: DayCell[][] = [];
+
+if (view === 'calendar') {
+  try {
+    const gridStart = new Date(denverMidnightIso(year, month, 1));
+    gridStart.setUTCDate(gridStart.getUTCDate() - gridStartOffset);
+    const gridEnd = new Date(gridStart);
+    gridEnd.setUTCDate(gridEnd.getUTCDate() + totalCells);
+
+    const monthEvents = await fetchEventsInRange(gridStart, gridEnd);
+    const eventsByDay = new Map<string, CalendarEvent[]>();
+    for (const event of monthEvents) {
+      for (const key of getEventDayKeys(event)) {
+        if (!eventsByDay.has(key)) eventsByDay.set(key, []);
+        eventsByDay.get(key)!.push(event);
+      }
+    }
+
+    const cells: DayCell[] = [];
+    for (let i = 0; i < totalCells; i++) {
+      const cellDate = new Date(gridStart);
+      cellDate.setUTCDate(gridStart.getUTCDate() + i);
+      const cellDay = cellDate.getUTCDate();
+      const cellMonth = cellDate.getUTCMonth() + 1;
+      const cellYear = cellDate.getUTCFullYear();
+      const dateKey = `${cellYear}-${String(cellMonth).padStart(2, '0')}-${String(cellDay).padStart(2, '0')}`;
+      cells.push({
+        day: cellDay,
+        dateKey,
+        inMonth: cellMonth === month && cellYear === year,
+        events: eventsByDay.get(dateKey) ?? [],
+      });
+    }
+
+    weeks = Array.from({ length: totalCells / 7 }, (_, w) => cells.slice(w * 7, w * 7 + 7));
+  } catch (err) {
+    console.error('Failed to load calendar view', err);
+    loadError = true;
+  }
+} else {
+  try {
+    listEvents = await fetchUpcomingEvents();
+  } catch (err) {
+    console.error('Failed to load events', err);
+    loadError = true;
+  }
+}
+
+const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+type MonthGroup = { label: string; events: CalendarEvent[] };
+const listGroups: MonthGroup[] = [];
+for (const event of listEvents) {
+  const label = formatEventDate(event, monthHeadingOptions);
+  const lastGroup = listGroups[listGroups.length - 1];
+  if (lastGroup && lastGroup.label === label) {
+    lastGroup.events.push(event);
+  } else {
+    listGroups.push({ label, events: [event] });
+  }
+}
 ---
 
 <BaseLayout title="Events">
   <h1>Events</h1>
   <p>Upcoming neighborhood events, meetups, and circle gatherings.</p>
 
-  <div class="card overflow-hidden p-0">
-    <iframe
-      src="https://calendar.google.com/calendar/embed?src=0ce3a25e6fd955c22169b082528dc03ccdf62b9e88f3e9ba1c4fff8c61a8ac9a%40group.calendar.google.com&ctz=America%2FDenver"
-      style="border: 0"
-      width="100%"
-      height="600"
-      frameborder="0"
-      scrolling="no"
-      title="Villa Park Friends and Neighbors events calendar"
-    >
-    </iframe>
+  <div class="flex flex-wrap items-center gap-3 mb-6">
+    <a href={CALENDAR_SUBSCRIBE_URL} target="_blank" rel="noopener" class="btn">
+      Subscribe to this Calendar
+    </a>
+    <div class="flex rounded overflow-hidden border border-[#e9e0c8] dark:border-night-border">
+      <a
+        href="/events"
+        class:list={[
+          'px-4 py-2 text-sm font-heading uppercase tracking-wide no-underline',
+          view === 'list' ? 'bg-teal-dark text-white' : 'bg-white dark:bg-night-surface text-teal-dark',
+        ]}
+      >
+        List
+      </a>
+      <a
+        href="/events?view=calendar"
+        class:list={[
+          'px-4 py-2 text-sm font-heading uppercase tracking-wide no-underline',
+          view === 'calendar' ? 'bg-teal-dark text-white' : 'bg-white dark:bg-night-surface text-teal-dark',
+        ]}
+      >
+        Calendar
+      </a>
+    </div>
   </div>
 
+  {loadError && (
+    <div class="card">
+      <p class="mb-0">
+        We couldn't load the events calendar right now. Try refreshing, or view it directly on
+        {' '}<a href={CALENDAR_SUBSCRIBE_URL} target="_blank" rel="noopener">Google Calendar</a>.
+      </p>
+    </div>
+  )}
+
+  {!loadError && view === 'list' && listEvents.length === 0 && (
+    <div class="card">
+      <p class="mb-0">No upcoming events right now — check back soon.</p>
+    </div>
+  )}
+
+  {!loadError && view === 'list' && listGroups.length > 0 && (
+    <div class="flex flex-col gap-8">
+      {listGroups.map((group) => (
+        <div>
+          <div class="font-heading text-teal-dark uppercase tracking-tight text-lg mb-3">{group.label}</div>
+          <div class="flex flex-col gap-4">
+            {group.events.map((event) => (
+              <a href={`/events/${eventSlug(event)}?from=list`} class="card block no-underline hover:-translate-y-0.5 transition-transform">
+                <span class="badge mb-2 inline-block">
+                  {event.allDay
+                    ? formatEventDate(event, dateOptions)
+                    : `${formatEventDate(event, dateOptions)} · ${timeFormatter.format(new Date(event.start))}`}
+                </span>
+                <h3 class="mb-1">{event.title}</h3>
+                {event.location && <p class="mb-0 text-sm text-neutral-600 dark:text-[#c9c2ae]">{event.location}</p>}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {!loadError && view === 'calendar' && (
+    <div class="card overflow-hidden p-0">
+      <div class="relative flex items-center justify-between px-4 py-3 bg-teal-header gap-2">
+        <a href={`/events?view=calendar&month=${prevMonthParam}`} class="text-white no-underline font-heading text-lg px-2" aria-label="Previous month">&larr;</a>
+        <span class="font-heading text-white uppercase tracking-wide flex-1 text-center">{monthLabel}</span>
+        <a href={`/events?view=calendar&month=${nextMonthParam}`} class="text-white no-underline font-heading text-lg px-2" aria-label="Next month">&rarr;</a>
+        {!isCurrentMonth && (
+          <a
+            href="/events?view=calendar"
+            class="badge no-underline absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          >
+            Today
+          </a>
+        )}
+      </div>
+
+      <div class="grid grid-cols-7 text-center text-xs font-heading uppercase tracking-wide text-teal-dark border-b border-[#e9e0c8] dark:border-night-border">
+        {weekdayLabels.map((label) => (
+          <div class="py-2">{label}</div>
+        ))}
+      </div>
+
+      <div class="grid grid-cols-7">
+        {weeks.flat().map((cell) => (
+          <div
+            class:list={[
+              'min-h-24 sm:min-h-28 border-b border-r border-[#e9e0c8] dark:border-night-border p-1.5 align-top',
+              !cell.inMonth && 'bg-cream/40 dark:bg-night/40 text-neutral-400',
+              cell.dateKey === nowDenverKey && 'bg-gold/15 ring-1 ring-inset ring-gold-dark',
+            ]}
+          >
+            <div class:list={['text-xs font-heading mb-1', cell.dateKey === nowDenverKey && 'text-gold-ink font-extrabold']}>
+              {cell.day}
+            </div>
+            <div class="flex flex-col gap-1">
+              {cell.events.slice(0, 3).map((event) => (
+                <a
+                  href={`/events/${eventSlug(event)}?from=calendar&month=${currentMonthParam}`}
+                  class="block text-[11px] leading-tight bg-gold/70 text-ink rounded px-1 py-0.5 no-underline truncate hover:bg-gold"
+                  title={event.title}
+                >
+                  {event.title}
+                </a>
+              ))}
+              {cell.events.length > 3 && (
+                <span class="text-[11px] text-teal-dark">+{cell.events.length - 3} more</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
   <p class="mt-6">
-    Have an event you'd like added to the calendar? Reach out on the{' '}
-    <a href="/contact">Contact</a> page.
+    Have an event you'd like added to the calendar? Reach out on the <a href="/contact">Contact</a> page.
   </p>
 </BaseLayout>

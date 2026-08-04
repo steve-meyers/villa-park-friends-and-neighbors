@@ -1,0 +1,139 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  fetchEventByShortId,
+  buildGoogleAddUrl,
+  formatEventDate,
+  eventSlug,
+  shortIdFromSlug,
+  CALENDAR_SUBSCRIBE_URL,
+} from '../../lib/calendar';
+
+const { slug } = Astro.params;
+const shortId = slug ? shortIdFromSlug(slug) : undefined;
+
+let event = null;
+let loadError = false;
+try {
+  event = shortId ? await fetchEventByShortId(shortId) : null;
+} catch (err) {
+  console.error('Failed to load event', err);
+  loadError = true;
+}
+
+const notFound = !event && !loadError;
+if (notFound) {
+  Astro.response.status = 404;
+}
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=60');
+
+const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+const timeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'America/Denver',
+});
+
+const whenText = event
+  ? event.allDay
+    ? formatEventDate(event, dateOptions)
+    : `${formatEventDate(event, dateOptions)} · ${timeFormatter.format(new Date(event.start))} – ${timeFormatter.format(new Date(event.end))}`
+  : '';
+
+const fromParam = Astro.url.searchParams.get('from');
+const monthParam = Astro.url.searchParams.get('month');
+const isValidMonth = monthParam !== null && /^\d{4}-(0[1-9]|1[0-2])$/.test(monthParam);
+const backHref = fromParam === 'calendar' ? `/events?view=calendar${isValidMonth ? `&month=${monthParam}` : ''}` : '/events';
+
+// Uses the actual request origin (not the fixed production Astro.site) so the
+// Copy Link button shares whatever's actually loaded — localhost, a Netlify
+// deploy preview, or production. OG/canonical tags in BaseLayout still use the
+// fixed production domain, which is what they should always point to.
+const shareUrl = event ? new URL(`/events/${eventSlug(event)}`, Astro.url.origin).href : '';
+
+function truncate(text: string, max: number): string {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  return clean.length > max ? `${clean.slice(0, max - 1).trimEnd()}…` : clean;
+}
+
+const ogDescription = event
+  ? [whenText, event.location, event.description ? truncate(event.description, 160) : '']
+      .filter(Boolean)
+      .join(' — ')
+  : undefined;
+---
+
+<BaseLayout title={event?.title ?? 'Event'} description={ogDescription}>
+  <p class="mb-4"><a href={backHref}>&larr; All events</a></p>
+
+  {loadError && (
+    <div class="card">
+      <p class="mb-0">
+        We couldn't load this event right now. Try refreshing, or view it directly on
+        {' '}<a href={CALENDAR_SUBSCRIBE_URL} target="_blank" rel="noopener">Google Calendar</a>.
+      </p>
+    </div>
+  )}
+
+  {notFound && (
+    <div class="card">
+      <h1 class="mt-0">Event Not Found</h1>
+      <p>
+        This event may have expired, been removed, or the link may be incorrect. Check the events
+        page for what's currently happening.
+      </p>
+      <a href={backHref} class="btn-primary">
+        Back to Events
+      </a>
+    </div>
+  )}
+
+  {event && (
+    <div class="card">
+      <span class="badge mb-3 inline-block">{whenText}</span>
+      <h1 class="mt-0">{event.title}</h1>
+
+      {event.location && (
+        <p class="text-neutral-600 dark:text-[#c9c2ae]">{event.location}</p>
+      )}
+
+      {event.description && (
+        <p style="white-space: pre-line;">{event.description}</p>
+      )}
+
+      <div class="flex flex-wrap gap-3 mt-6">
+        <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="btn">
+          Add to Google Calendar
+        </a>
+        <a href={`/events/${eventSlug(event)}.ics`} class="btn">
+          Download .ics
+        </a>
+        <button type="button" class="btn-primary" data-copy-link={shareUrl}>
+          Copy Link
+        </button>
+      </div>
+    </div>
+  )}
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-link]').forEach((button) => {
+    const url = button.dataset.copyLink;
+    if (!url) return;
+    const originalText = button.textContent;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        button.textContent = 'Copied!';
+      } catch {
+        button.textContent = 'Copy failed';
+      }
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 2000);
+    });
+  });
+</script>
