@@ -92,28 +92,32 @@ const ogDescription = event
   )}
 
   {event && (
-    <div class="card">
-      <span class="badge mb-3 inline-block">{whenText}</span>
-      <h1 class="mt-0">{event.title}</h1>
+    <div class="card overflow-hidden">
+      <span class="inline-block bg-gold text-teal-deep font-body font-bold uppercase tracking-wide text-xs rounded-lg px-3 py-2 mb-3">
+        {whenText}
+      </span>
+      <h1 class="mt-0 break-words">{event.title}</h1>
 
       {event.location && (
-        <p class="text-neutral-600 dark:text-[#c9c2ae]">{event.location}</p>
+        <p class="text-neutral-600 dark:text-[#c9c2ae] break-words">{event.location}</p>
       )}
 
       {event.description && (
-        <p style="white-space: pre-line;">{event.description}</p>
+        <p class="break-words" style="white-space: pre-line;">{event.description}</p>
       )}
 
-      <div class="flex flex-wrap gap-3 mt-6">
-        <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="btn">
+      <div class="flex flex-col gap-3 mt-6">
+        <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="btn text-center">
           Add to Google Calendar
         </a>
-        <a href={`/events/${eventSlug(event)}.ics`} class="btn">
-          Download .ics
-        </a>
-        <button type="button" class="btn-primary" data-copy-link={shareUrl}>
-          Copy Link
-        </button>
+        <div class="flex gap-3">
+          <a href={`/events/${eventSlug(event)}.ics`} class="btn text-center flex-1 min-w-0">
+            Download .ics
+          </a>
+          <button type="button" class="btn-primary text-center flex-1 min-w-0" data-copy-link={shareUrl}>
+            Copy Link
+          </button>
+        </div>
       </div>
     </div>
   )}
