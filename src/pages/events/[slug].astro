@@ -107,16 +107,16 @@ const ogDescription = event
       )}
 
       <div class="flex flex-col gap-3 mt-6">
-        <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="btn text-center">
-          Add to Google Calendar
-        </a>
+        <button type="button" class="btn-primary text-center" data-copy-link={shareUrl}>
+          Copy Link
+        </button>
         <div class="flex gap-3">
+          <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="btn text-center flex-1 min-w-0">
+            Add to Google Calendar
+          </a>
           <a href={`/events/${eventSlug(event)}.ics`} class="btn text-center flex-1 min-w-0">
             Download .ics
           </a>
-          <button type="button" class="btn-primary text-center flex-1 min-w-0" data-copy-link={shareUrl}>
-            Copy Link
-          </button>
         </div>
       </div>
     </div>
