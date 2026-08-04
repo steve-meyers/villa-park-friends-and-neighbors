@@ -43,8 +43,6 @@ if (monthParam && /^\d{4}-(0[1-9]|1[0-2])$/.test(monthParam)) {
   month = m;
 }
 
-const isCurrentMonth = year === nowYear && month === nowMonth;
-
 const firstOfMonth = new Date(Date.UTC(year, month - 1, 1));
 const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 const firstWeekday = firstOfMonth.getUTCDay(); // 0 = Sunday
@@ -195,18 +193,10 @@ for (const event of listEvents) {
 
   {!loadError && view === 'calendar' && (
     <div class="card overflow-hidden p-0">
-      <div class="relative flex items-center justify-between px-4 py-3 bg-teal-header gap-2">
+      <div class="flex items-center justify-between px-4 py-3 bg-teal-header gap-2">
         <a href={`/events?view=calendar&month=${prevMonthParam}`} class="text-white no-underline font-heading text-lg px-2" aria-label="Previous month">&larr;</a>
         <span class="font-heading text-white uppercase tracking-wide flex-1 text-center">{monthLabel}</span>
         <a href={`/events?view=calendar&month=${nextMonthParam}`} class="text-white no-underline font-heading text-lg px-2" aria-label="Next month">&rarr;</a>
-        {!isCurrentMonth && (
-          <a
-            href="/events?view=calendar"
-            class="badge no-underline absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2"
-          >
-            Today
-          </a>
-        )}
       </div>
 
       <div class="grid grid-cols-7 text-center text-xs font-heading uppercase tracking-wide text-teal-dark border-b border-[#e9e0c8] dark:border-night-border">
