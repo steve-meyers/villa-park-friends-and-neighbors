@@ -110,11 +110,12 @@ const ogDescription = event
         <button type="button" class="btn-primary text-center" data-copy-link={shareUrl}>
           Copy Link
         </button>
-        <div class="flex gap-3">
-          <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="btn text-center flex-1 min-w-0">
+        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm font-heading uppercase tracking-wide">
+          <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="text-teal-dark no-underline hover:underline">
             Add to Google Calendar
           </a>
-          <a href={`/events/${eventSlug(event)}.ics`} class="btn text-center flex-1 min-w-0">
+          <span class="text-neutral-400 dark:text-night-border" aria-hidden="true">·</span>
+          <a href={`/events/${eventSlug(event)}.ics`} class="text-teal-dark no-underline hover:underline">
             Download .ics
           </a>
         </div>
