@@ -110,9 +110,9 @@ const ogDescription = event
         <button type="button" class="btn-primary text-center" data-copy-link={shareUrl}>
           Copy Link
         </button>
-        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-x-2 gap-y-1 text-sm font-heading uppercase tracking-wide">
+        <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-x-2 gap-y-1 text-xs font-heading uppercase tracking-wide whitespace-nowrap">
           <a href={buildGoogleAddUrl(event)} target="_blank" rel="noopener" class="text-teal-dark no-underline hover:underline text-right">
-            Add to Google Calendar
+            Add to Calendar
           </a>
           <span class="text-neutral-400 dark:text-night-border" aria-hidden="true">·</span>
           <a href={`/events/${eventSlug(event)}.ics`} class="text-teal-dark no-underline hover:underline text-left">
