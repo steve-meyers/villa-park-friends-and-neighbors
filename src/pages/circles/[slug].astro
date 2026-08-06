@@ -17,9 +17,10 @@ const { Content } = await render(circle);
 const posts = (await getCollection('blog'))
   .filter((post) => post.data.circles?.includes(circle.id))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const description = `${circle.data.title} — a Villa Park Friends and Neighbors circle. News, updates, and highlights from neighbors getting involved.`;
 ---
 
-<BaseLayout title={circle.data.title}>
+<BaseLayout title={circle.data.title} description={description}>
   <h1>{circle.data.title}</h1>
   <Content />
 
@@ -32,7 +33,7 @@ const posts = (await getCollection('blog'))
             {post.data.image && (
               <img
                 src={optimizedImage(post.data.image, 800)}
-                alt=""
+                alt={post.data.title}
                 class="w-full h-48 object-cover rounded mb-4"
                 loading="lazy"
               />

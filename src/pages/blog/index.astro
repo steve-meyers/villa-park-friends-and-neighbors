@@ -8,7 +8,10 @@ const posts = (await getCollection('blog')).sort(
 );
 ---
 
-<BaseLayout title="Blog">
+<BaseLayout
+  title="Blog"
+  description="Stories and updates from the Villa Park neighborhood — read the latest posts from Villa Park Friends and Neighbors."
+>
   <h1>Blog</h1>
   {posts.length === 0 && <p>No posts yet — check back soon.</p>}
   <ul class="list-none p-0 space-y-6">
@@ -17,7 +20,7 @@ const posts = (await getCollection('blog')).sort(
         {post.data.image && (
           <img
             src={optimizedImage(post.data.image, 800)}
-            alt=""
+            alt={post.data.title}
             class="w-full h-48 object-cover rounded mb-4"
             loading="lazy"
           />

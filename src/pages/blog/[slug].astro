@@ -13,6 +13,23 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  datePublished: post.data.date.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: post.data.author,
+  },
+  ...(post.data.summary && { description: post.data.summary }),
+  ...(post.data.image && { image: new URL(optimizedImage(post.data.image, 1200), Astro.site).href }),
+  publisher: {
+    '@type': 'Organization',
+    name: 'Villa Park Friends and Neighbors',
+  },
+};
 ---
 
 <BaseLayout
@@ -20,6 +37,7 @@ const { Content } = await render(post);
   description={post.data.summary}
   image={post.data.image}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <article>
     <h1>{post.data.title}</h1>
     <p class="text-neutral-500 dark:text-neutral-400 text-sm">
@@ -28,7 +46,7 @@ const { Content } = await render(post);
     {post.data.image && (
       <img
         src={optimizedImage(post.data.image, 1400)}
-        alt=""
+        alt={post.data.title}
         class="w-full rounded-xl mb-4"
         loading="lazy"
       />

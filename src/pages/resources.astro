@@ -8,7 +8,10 @@ const resources = (await getCollection('resources')).sort(
 const rendered = await Promise.all(resources.map((r) => render(r)));
 ---
 
-<BaseLayout title="Resources">
+<BaseLayout
+  title="Resources"
+  description="Handy links and resources for Villa Park neighbors — local services, community info, and ways to get involved."
+>
   <h1>Resources</h1>
   <p>Handy links and information for the neighborhood.</p>
 

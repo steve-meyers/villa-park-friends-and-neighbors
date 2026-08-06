@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://villaparkfans.com/sitemap-index.xml

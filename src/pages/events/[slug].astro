@@ -64,6 +64,29 @@ const ogDescription = event
       .filter(Boolean)
       .join(' — ')
   : undefined;
+
+const eventSchema = event && {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: event.title,
+  startDate: event.start,
+  endDate: event.end,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  ...(event.description && { description: event.description }),
+  ...(event.location && {
+    location: {
+      '@type': 'Place',
+      name: event.location,
+      address: event.location,
+    },
+  }),
+  organizer: {
+    '@type': 'Organization',
+    name: 'Villa Park Friends and Neighbors',
+    url: 'https://villaparkfans.com',
+  },
+};
 ---
 
 <BaseLayout title={event?.title ?? 'Event'} description={ogDescription}>
@@ -93,6 +116,7 @@ const ogDescription = event
 
   {event && (
     <div class="card overflow-hidden">
+      <script type="application/ld+json" set:html={JSON.stringify(eventSchema)} />
       <span class="inline-block bg-gold text-teal-deep font-body font-bold uppercase tracking-wide text-xs rounded-lg px-3 py-2 mb-3">
         {whenText}
       </span>

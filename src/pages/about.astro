@@ -14,7 +14,10 @@ const galleryEntry = await getEntry('gallery', 'photos');
 const photos = galleryEntry?.data.photos ?? [];
 ---
 
-<BaseLayout title="About">
+<BaseLayout
+  title="About"
+  description="Learn about Villa Park Friends and Neighbors — who we are, what we do, and how neighbors in the Villa Park neighborhood of Denver are building community together."
+>
   <h1>{page!.data.title}</h1>
   <div class="about-content">
     <Content />

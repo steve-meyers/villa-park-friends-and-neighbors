@@ -22,6 +22,21 @@ const circles = (await getCollection('circles')).sort((a, b) =>
 const pageTitle = `${title} | Villa Park Friends and Neighbors`;
 const ogImageUrl = new URL(optimizedImage(image, 1200), Astro.site).href;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Villa Park Friends and Neighbors',
+  alternateName: 'Villa Park FANs',
+  url: Astro.site?.href,
+  logo: new URL('/images/og-default.png', Astro.site).href,
+  description:
+    'Building community, taking action, and celebrating the Villa Park neighborhood in Denver, Colorado — maintained by volunteers.',
+  areaServed: {
+    '@type': 'Place',
+    name: 'Villa Park, Denver, Colorado',
+  },
+};
 ---
 
 <!doctype html>
@@ -32,6 +47,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="google-site-verification" content="5XFGgMV3CjXXBrlC9TpWFoURHRYnKbEnpZ6IBUJ15rM" />
     <link rel="canonical" href={canonicalUrl} />
 
     <meta property="og:type" content="website" />
@@ -45,6 +61,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
     <script is:inline>
       (function () {
         const stored = localStorage.getItem('theme');
