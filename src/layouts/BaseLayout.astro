@@ -11,7 +11,7 @@ interface Props {
 
 const {
   title,
-  description = "Building community, taking action, and celebrating the Villa Park neighborhood. News, updates, and resources for our neighborhood — maintained by volunteers.",
+  description = "We are a registered neighborhood organization representing the Villa Park neighborhood in Denver, Colorado — volunteer-run news, updates, and resources.",
   image = '/images/og-default.png',
 } = Astro.props;
 
@@ -85,7 +85,7 @@ const organizationSchema = {
       >
 
       <div class="flex items-center gap-4">
-        <nav class="hidden sm:flex flex-wrap items-center gap-5">
+        <nav class="hidden lg:flex flex-wrap items-center gap-5">
           <a href="/" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Home</a>
           <a href="/blog" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Blog</a>
           <a href="/events" class="font-heading text-white font-semibold text-sm uppercase tracking-wider no-underline underline-offset-4 decoration-gold hover:underline focus-visible:underline">Events</a>
@@ -121,7 +121,7 @@ const organizationSchema = {
 
         <button
           type="button"
-          class="theme-toggle-btn hidden sm:inline-flex items-center gap-0.5 bg-black/15 rounded-full p-0.5 cursor-pointer shrink-0"
+          class="theme-toggle-btn hidden lg:inline-flex items-center gap-0.5 bg-black/15 rounded-full p-0.5 cursor-pointer shrink-0"
           aria-label="Toggle dark mode"
           aria-pressed="false"
         >
@@ -133,7 +133,7 @@ const organizationSchema = {
           >
         </button>
 
-        <div class="sm:hidden flex items-center gap-1">
+        <div class="lg:hidden flex items-center gap-1">
         <button
           type="button"
           class="theme-toggle-btn inline-flex items-center gap-0.5 bg-black/15 rounded-full p-1 cursor-pointer"
@@ -148,7 +148,7 @@ const organizationSchema = {
           >
         </button>
 
-        <details class="relative">
+        <details id="mobile-menu" class="relative">
           <summary
             class="flex items-center justify-center w-10 h-10 text-white cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden bg-black/15 rounded-full"
             aria-label="Menu"
@@ -162,7 +162,7 @@ const organizationSchema = {
               ></path>
             </svg>
           </summary>
-          <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-night-surface rounded-xl shadow-lg py-2 z-20 flex flex-col">
+          <div id="mobile-menu-panel" class="absolute right-0 mt-2 w-64 max-h-[calc(100vh-5rem)] overflow-y-auto bg-white dark:bg-night-surface rounded-xl shadow-lg py-2 z-20 flex flex-col">
           <a href="/" class="block px-4 py-2 text-teal-dark font-medium no-underline hover:bg-teal/10"
             >Home</a
           >
@@ -229,6 +229,14 @@ const organizationSchema = {
             details.removeAttribute('open');
           }
         });
+      });
+
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+      mobileMenu?.addEventListener('toggle', () => {
+        if (mobileMenu.hasAttribute('open') && mobileMenuPanel) {
+          mobileMenuPanel.scrollTop = 0;
+        }
       });
 
       function syncThemeButtons(theme: string) {

@@ -1,3 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <text x="50" y="50" font-size="80" text-anchor="middle" dominant-baseline="central">🏡</text>
+  <rect width="100" height="100" rx="20" fill="#24504c" />
+  <path d="M50 20 L82 48 L74 48 L74 78 L26 78 L26 48 L18 48 Z" fill="#edd286" />
+  <rect x="42" y="58" width="16" height="20" fill="#24504c" />
 </svg>
