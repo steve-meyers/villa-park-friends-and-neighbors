@@ -5,16 +5,16 @@ This circle focuses on keeping our neighborhood clean and green. One great way t
 
 Have other ideas for this circle? Reach out on the [Contact](/contact) page.
 
-
-
 ## Wins:
 
 Our Green Team upgraded the [Villa Park sign ](https://denverpublicart.org/public-arts/villa-park-gateway/)at 8th and Grove with native flowers and trees to make the area more beautiful. We're currently in discussion with the city to install bioswales and more trees!
 
 ![](/images/uploads/img_7269.jpeg)
 
+The Gulch Garbage Grabbers have removed thousands of pounds of trash from the gulch and the surrounding area, with no sign of stopping! Recently, we partnered with Denver Parks and Rec to clean out the water by the beaver dam near Perry Station - let's keep the natural areas beautiful!
 
+![](/images/uploads/img_0841.jpeg)
 
-The Gulch Garbage Grabbers have removed thousands of pounds of trash from the gulch and the surrounding area, with no sign of stopping! Let's keep the natural areas beautiful!
+![](/images/uploads/img_0851.jpeg)
 
-![](/images/uploads/img_7239.jpeg)
+![](/images/uploads/1000007424.jpg)
