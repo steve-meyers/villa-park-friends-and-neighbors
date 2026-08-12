@@ -7,7 +7,7 @@ Have other ideas for this circle? Reach out on the [Contact](/contact) page.
 
 ## Wins:
 
-Our Green Team upgraded the [Villa Park sign ](https://denverpublicart.org/public-arts/villa-park-gateway/)at 8th and Grove with native flowers and trees to make the area more beautiful. We're currently in discussion with the city to install bioswales and more trees!
+Our Green Team upgraded the [Villa Park sign ](https://denverpublicart.org/public-arts/villa-park-gateway/)at 8th and Grove with native flowers and trees to make the area more beautiful. We're currently in discussion with the city to install bioswales and more trees - if you want to be a part of these discussions, just reach out!
 
 ![](/images/uploads/img_7269.jpeg)
 
