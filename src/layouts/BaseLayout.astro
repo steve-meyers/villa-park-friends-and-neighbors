@@ -7,19 +7,21 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  fullTitle?: boolean;
 }
 
 const {
   title,
   description = "We are a registered neighborhood organization representing the Villa Park neighborhood in Denver, Colorado — volunteer-run news, updates, and resources.",
   image = '/images/og-default.png',
+  fullTitle = false,
 } = Astro.props;
 
 const circles = (await getCollection('circles')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title)
 );
 
-const pageTitle = `${title} | Villa Park Friends and Neighbors`;
+const pageTitle = fullTitle ? title : `${title} | Villa Park Friends and Neighbors, Denver`;
 const ogImageUrl = new URL(optimizedImage(image, 1200), Astro.site).href;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 
@@ -36,6 +38,10 @@ const organizationSchema = {
     '@type': 'Place',
     name: 'Villa Park, Denver, Colorado',
   },
+  sameAs: [
+    'https://www.facebook.com/groups/1980251375833396',
+    'https://discord.gg/JW7FNNqkQ',
+  ],
 };
 ---
 

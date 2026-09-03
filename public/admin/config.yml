@@ -19,6 +19,7 @@ collections:
       - { label: "Author", name: "author", widget: "string", default: "Neighborhood Team" }
       - { label: "Summary", name: "summary", widget: "text", required: false }
       - { label: "Featured Image", name: "image", widget: "image", required: false }
+      - { label: "Featured Image Alt Text", name: "imageAlt", widget: "string", required: false, hint: "Describe the image for screen readers and search engines, e.g. \"Neighbors planting tomato starts in a Villa Park raised garden bed\"." }
       - label: "Circles"
         name: "circles"
         widget: "relation"

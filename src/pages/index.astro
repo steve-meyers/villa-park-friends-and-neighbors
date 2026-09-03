@@ -15,7 +15,7 @@ const galleryEntry = await getEntry('gallery', 'photos');
 const photos = galleryEntry?.data.photos ?? [];
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="Villa Park Friends and Neighbors | Denver Neighborhood Association" fullTitle>
   <div class="relative left-1/2 -translate-x-1/2 -mt-8 w-screen bg-teal-deep">
     <div
       class="absolute inset-0 opacity-40 bg-[radial-gradient(rgba(255,255,255,0.16)_1.4px,transparent_1.4px)] bg-[length:13px_13px]"
@@ -25,6 +25,9 @@ const photos = galleryEntry?.data.photos ?? [];
     <div class="relative max-w-2xl mx-auto px-6 py-14 text-center">
       <span class="badge mb-5">Neighbors welcome</span>
       <h1 class="text-white text-4xl sm:text-5xl mb-3">Villa Park<br />Friends and Neighbors</h1>
+      <p class="text-white/70 text-sm sm:text-base uppercase tracking-widest mb-3">
+        Denver, Colorado
+      </p>
       <p class="font-heading uppercase tracking-wide text-gold text-lg sm:text-xl mb-2">
         Building community, taking action, and celebrating the Villa Park neighborhood.
       </p>
@@ -43,7 +46,7 @@ const photos = galleryEntry?.data.photos ?? [];
         {post.data.image && (
           <img
             src={optimizedImage(post.data.image, 800)}
-            alt={post.data.title}
+            alt={post.data.imageAlt || post.data.title}
             class="w-full h-48 object-cover rounded mb-4"
             loading="lazy"
           />

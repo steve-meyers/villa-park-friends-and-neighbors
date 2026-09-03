@@ -46,7 +46,7 @@ const articleSchema = {
     {post.data.image && (
       <img
         src={optimizedImage(post.data.image, 1400)}
-        alt={post.data.title}
+        alt={post.data.imageAlt || post.data.title}
         class="w-full rounded-xl mb-4"
         loading="lazy"
       />
