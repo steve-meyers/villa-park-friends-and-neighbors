@@ -88,6 +88,11 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
       font-size: 13px;
     }
     .auth-bar button { font: inherit; font-weight: 700; cursor: pointer; border: 1px solid var(--line); background: var(--gold); padding: 6px 14px; border-radius: 6px; }
+    .auth-gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--teal-dark); padding: 24px; }
+    .auth-gate-box { background: #fff; border-radius: 10px; padding: 32px 36px; max-width: 380px; text-align: center; }
+    .auth-gate-box h1 { font-size: 18px; margin: 0 0 12px 0; }
+    .auth-gate-box p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 0 0 18px 0; }
+    .auth-gate-box button { font: inherit; font-weight: 700; cursor: pointer; border: 1px solid var(--gold); background: var(--gold); padding: 10px 22px; border-radius: 6px; font-size: 14px; }
     .layout { display: flex; gap: 0; height: calc(100vh - 180px); }
     .form-pane { width: 44%; min-width: 380px; height: 100%; overflow-y: auto; padding: 20px 24px 80px 24px; background: #fbfaf5; border-right: 1px solid #e2ddc9; }
     .preview-pane { flex: 1; display: flex; flex-direction: column; height: 100%; min-width: 0; }
@@ -128,6 +133,16 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
 </head>
 <body>
 
+<div id="authGate" class="auth-gate">
+  <div class="auth-gate-box">
+    <h1>🏡 Villa Park FANs — Newsletter Builder</h1>
+    <p id="gateStatus">Checking login status…</p>
+    <button type="button" id="gateLoginBtn" class="primary" hidden>Log in</button>
+  </div>
+</div>
+
+<div id="builderContent" hidden>
+
 <header class="app-header">
   <h1>🏡 Villa Park FANs — Newsletter Builder</h1>
   <p>Fill in this month's content, pick events straight from the calendar, watch the preview update, then copy the HTML/plain text into MailerLite or save a copy to the repo.</p>
@@ -135,7 +150,6 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
 
 <div class="auth-bar">
   <span id="authNote">Checking login status…</span>
-  <button type="button" id="loginBtn" hidden>Log in to save to the repo</button>
 </div>
 
 <div class="howto">
@@ -260,6 +274,8 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     </div>
     <iframe id="previewFrame" title="Newsletter preview"></iframe>
   </div>
+</div>
+
 </div>
 
 <script type="application/json" id="upcomingEventsData" set:html={upcomingEventsJson}></script>
@@ -859,25 +875,35 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     });
   });
 
-  // ---- Netlify Identity gating (the real check happens server-side in /api/newsletter/save) ----
+  // ---- Netlify Identity gating ----
+  // This client-side gate is a convenience, not the real security boundary — it
+  // only controls what this page renders. The actual write to the repo is only
+  // ever authorized server-side, in /api/newsletter/save, which independently
+  // verifies the session with Netlify's identity service on every request.
 
   function refreshAuthUI() {
     var user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+    var authGate = document.getElementById("authGate");
+    var builderContent = document.getElementById("builderContent");
+    var gateStatus = document.getElementById("gateStatus");
+    var gateLoginBtn = document.getElementById("gateLoginBtn");
     var saveBtn = document.getElementById("saveRepoBtn");
-    var loginBtn = document.getElementById("loginBtn");
     var authNote = document.getElementById("authNote");
+
     if (user) {
+      authGate.hidden = true;
+      builderContent.hidden = false;
       saveBtn.disabled = false;
-      loginBtn.hidden = true;
-      authNote.textContent = "Logged in as " + (user.email || "admin") + " — you can save to the repo.";
+      authNote.textContent = "Logged in as " + (user.email || "admin") + ".";
     } else {
-      saveBtn.disabled = true;
-      loginBtn.hidden = false;
-      authNote.textContent = "Log in to save this newsletter to the repo (not required for copying into MailerLite).";
+      authGate.hidden = false;
+      builderContent.hidden = true;
+      gateStatus.textContent = "Log in with your site admin account to use this tool.";
+      gateLoginBtn.hidden = false;
     }
   }
 
-  document.getElementById("loginBtn").addEventListener("click", function () {
+  document.getElementById("gateLoginBtn").addEventListener("click", function () {
     if (window.netlifyIdentity) window.netlifyIdentity.open("login");
   });
 
@@ -886,7 +912,7 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     window.netlifyIdentity.on("login", refreshAuthUI);
     window.netlifyIdentity.on("logout", refreshAuthUI);
   } else {
-    document.getElementById("authNote").textContent = "Couldn't load the login widget — Save to repo is unavailable, but copying into MailerLite still works.";
+    document.getElementById("gateStatus").textContent = "Couldn't load the login widget — try refreshing the page.";
   }
 
   populateSimpleFields();
