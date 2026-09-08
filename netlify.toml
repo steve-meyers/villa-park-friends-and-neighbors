@@ -1,3 +1,7 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  # Newsletter drafts/archives saved under email-templates/sent/ are just
+  # records, not site content — skip the deploy when that's the only thing
+  # that changed in this push.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':!email-templates/sent'"

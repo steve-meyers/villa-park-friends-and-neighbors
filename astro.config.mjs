@@ -10,7 +10,7 @@ import { rehypeOptimizeImages } from './src/lib/rehype-optimize-images.mjs';
 export default defineConfig({
   site: 'https://villaparkfans.com',
   adapter: netlify(),
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.includes('/admin/') })],
   vite: {
     plugins: [tailwindcss()]
   },
