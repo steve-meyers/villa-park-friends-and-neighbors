@@ -17,4 +17,4 @@ The Family Engagement and Support Circle sprang into action, advocating to Denve
 
 Does this sound like the type of action you want to help create, or want to get involved with the Family Engagement and Support Circle? [Join us on Discord to get plugged in!](https://discord.gg/Aayzn8WpZC) Alternatively, the Martinez Park trash pickup hosted by the Family Engagement and Support Circle meets every month in the park - [check out our events page ](https://villaparkfans.com/events)to add the link to your calendar. Can't wait to see you soon to make our neighborhood better!
 
-![](/images/uploads/img_8019.jpeg)
+![A different angle of an accessible porta potty installed in Joe P. Martinez Park in Villa Park, Denver](/images/uploads/img_8019.jpeg)
