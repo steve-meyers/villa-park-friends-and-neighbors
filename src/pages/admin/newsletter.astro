@@ -287,6 +287,49 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
 (function () {
   "use strict";
 
+  // ---- Netlify Identity gating (registered first, before anything below that
+  // could throw on unexpected data — the login button must always work even
+  // if the rest of the page's setup fails) ----
+  // This client-side gate is a convenience, not the real security boundary — it
+  // only controls what this page renders. The actual write to the repo is only
+  // ever authorized server-side, in /api/newsletter/save, which independently
+  // verifies the session with Netlify's identity service on every request.
+  (function setUpAuthGate() {
+    function refreshAuthUI() {
+      var user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+      var authGate = document.getElementById("authGate");
+      var builderContent = document.getElementById("builderContent");
+      var gateStatus = document.getElementById("gateStatus");
+      var gateLoginBtn = document.getElementById("gateLoginBtn");
+      var saveBtn = document.getElementById("saveRepoBtn");
+      var authNote = document.getElementById("authNote");
+
+      if (user) {
+        authGate.hidden = true;
+        builderContent.hidden = false;
+        if (saveBtn) saveBtn.disabled = false;
+        if (authNote) authNote.textContent = "Logged in as " + (user.email || "admin") + ".";
+      } else {
+        authGate.hidden = false;
+        builderContent.hidden = true;
+        gateStatus.textContent = "Log in with your site admin account to use this tool.";
+        gateLoginBtn.hidden = false;
+      }
+    }
+
+    document.getElementById("gateLoginBtn").addEventListener("click", function () {
+      if (window.netlifyIdentity) window.netlifyIdentity.open("login");
+    });
+
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", refreshAuthUI);
+      window.netlifyIdentity.on("login", refreshAuthUI);
+      window.netlifyIdentity.on("logout", refreshAuthUI);
+    } else {
+      document.getElementById("gateStatus").textContent = "Couldn't load the login widget — try refreshing the page.";
+    }
+  })();
+
   var STORAGE_KEY = "vpfans-newsletter-builder-draft-v2";
 
   var upcomingEventsData = JSON.parse(document.getElementById("upcomingEventsData").textContent || "[]");
@@ -874,46 +917,6 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
       alert("Couldn't save: " + err.message);
     });
   });
-
-  // ---- Netlify Identity gating ----
-  // This client-side gate is a convenience, not the real security boundary — it
-  // only controls what this page renders. The actual write to the repo is only
-  // ever authorized server-side, in /api/newsletter/save, which independently
-  // verifies the session with Netlify's identity service on every request.
-
-  function refreshAuthUI() {
-    var user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
-    var authGate = document.getElementById("authGate");
-    var builderContent = document.getElementById("builderContent");
-    var gateStatus = document.getElementById("gateStatus");
-    var gateLoginBtn = document.getElementById("gateLoginBtn");
-    var saveBtn = document.getElementById("saveRepoBtn");
-    var authNote = document.getElementById("authNote");
-
-    if (user) {
-      authGate.hidden = true;
-      builderContent.hidden = false;
-      saveBtn.disabled = false;
-      authNote.textContent = "Logged in as " + (user.email || "admin") + ".";
-    } else {
-      authGate.hidden = false;
-      builderContent.hidden = true;
-      gateStatus.textContent = "Log in with your site admin account to use this tool.";
-      gateLoginBtn.hidden = false;
-    }
-  }
-
-  document.getElementById("gateLoginBtn").addEventListener("click", function () {
-    if (window.netlifyIdentity) window.netlifyIdentity.open("login");
-  });
-
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", refreshAuthUI);
-    window.netlifyIdentity.on("login", refreshAuthUI);
-    window.netlifyIdentity.on("logout", refreshAuthUI);
-  } else {
-    document.getElementById("gateStatus").textContent = "Couldn't load the login widget — try refreshing the page.";
-  }
 
   populateSimpleFields();
   bindSimpleFields();
