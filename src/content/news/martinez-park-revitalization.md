@@ -1,5 +1,5 @@
 ---
-title: Joe P. Martinez Park revitalization completed
+title: Joe P. Martinez Park Revitalization Completed
 url: https://lavozcolorado.com/2025/11/19/denver-parks-and-recreation-celebrates/
 category: Parks
 order: 1
