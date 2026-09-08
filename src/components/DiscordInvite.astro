@@ -1,10 +1,11 @@
 ---
+import { DISCORD_INVITE_URL } from '../lib/social';
+
 interface Props {
   class?: string;
 }
 
 const { class: className = '' } = Astro.props;
-const DISCORD_INVITE_URL = 'https://discord.gg/JW7FNNqkQ';
 ---
 
 <div class={`card ${className}`}>

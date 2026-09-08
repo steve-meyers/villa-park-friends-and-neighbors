@@ -1,5 +1,7 @@
 ## Development
 
+At the start of every session (or before starting new work if picking up mid-session), run `git pull` on `main` first. A CMS is used to edit content in this repo, so upstream commits can land at any time without the user mentioning it.
+
 When starting the dev server, use background mode:
 
 ```

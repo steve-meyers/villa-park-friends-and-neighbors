@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 import { optimizedImage } from '../lib/image';
+import { DISCORD_INVITE_URL } from '../lib/social';
+import DiscordFloatingInvite from '../components/DiscordFloatingInvite.astro';
 
 interface Props {
   title: string;
@@ -12,7 +14,7 @@ interface Props {
 
 const {
   title,
-  description = "We are a registered neighborhood organization representing the Villa Park neighborhood in Denver, Colorado — volunteer-run news, updates, and resources.",
+  description = "We are a registered neighborhood organization (RNO) representing the Villa Park neighborhood in Denver, Colorado — volunteer-run news, updates, and resources.",
   image = '/images/og-default.png',
   fullTitle = false,
 } = Astro.props;
@@ -40,7 +42,7 @@ const organizationSchema = {
   },
   sameAs: [
     'https://www.facebook.com/groups/1980251375833396',
-    'https://discord.gg/JW7FNNqkQ',
+    DISCORD_INVITE_URL,
   ],
 };
 ---
@@ -227,6 +229,8 @@ const organizationSchema = {
     <footer class="text-center text-ink text-xs font-mono uppercase tracking-wide py-6 bg-gold">
       <p>&copy; {new Date().getFullYear()} Villa Park Friends and Neighbors</p>
     </footer>
+
+    <DiscordFloatingInvite />
 
     <script>
       document.addEventListener('click', (event) => {
