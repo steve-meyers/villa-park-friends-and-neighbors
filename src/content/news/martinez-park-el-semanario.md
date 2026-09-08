@@ -1,5 +1,5 @@
 ---
-title: Denver Parks and Recreation celebrates completion
+title: Denver Parks and Recreation Celebrates Completion at Joe P Martinez Park
 url: https://www.elsemanarioonline.com/denver-parks-and-recreation-celebrates-completion-of-improvements-at-joe-p-martinez-park/
 category: Parks
 order: 2
