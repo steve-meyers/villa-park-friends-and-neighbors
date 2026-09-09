@@ -137,7 +137,7 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
   <div class="auth-gate-box">
     <h1>🏡 Villa Park FANs — Newsletter Builder</h1>
     <p id="gateStatus">Checking login status…</p>
-    <button type="button" id="gateLoginBtn" class="primary" hidden>Log in</button>
+    <button type="button" id="gateLoginBtn" class="primary">Log in</button>
   </div>
 </div>
 
@@ -295,30 +295,53 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
   // ever authorized server-side, in /api/newsletter/save, which independently
   // verifies the session with Netlify's identity service on every request.
   (function setUpAuthGate() {
-    function refreshAuthUI() {
-      var user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
-      var authGate = document.getElementById("authGate");
-      var builderContent = document.getElementById("builderContent");
-      var gateStatus = document.getElementById("gateStatus");
-      var gateLoginBtn = document.getElementById("gateLoginBtn");
-      var saveBtn = document.getElementById("saveRepoBtn");
-      var authNote = document.getElementById("authNote");
+    var resolved = false;
 
-      if (user) {
-        authGate.hidden = true;
-        builderContent.hidden = false;
-        if (saveBtn) saveBtn.disabled = false;
-        if (authNote) authNote.textContent = "Logged in as " + (user.email || "admin") + ".";
-      } else {
-        authGate.hidden = false;
-        builderContent.hidden = true;
-        gateStatus.textContent = "Log in with your site admin account to use this tool.";
-        gateLoginBtn.hidden = false;
+    function setGateStatus(html) {
+      document.getElementById("gateStatus").innerHTML = html;
+    }
+
+    function diagnose(extraLine) {
+      var lines = ["Log in with your site admin account to use this tool."];
+      if (extraLine) {
+        lines = [
+          "Still waiting on the login widget — you can still try logging in below.",
+          "<span style=\"color:#999; font-size:12px;\">" + extraLine + "</span>"
+        ];
+      }
+      setGateStatus(lines.join("<br>"));
+    }
+
+    function refreshAuthUI() {
+      resolved = true;
+      try {
+        var user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+        var authGate = document.getElementById("authGate");
+        var builderContent = document.getElementById("builderContent");
+        var saveBtn = document.getElementById("saveRepoBtn");
+        var authNote = document.getElementById("authNote");
+
+        if (user) {
+          authGate.hidden = true;
+          builderContent.hidden = false;
+          if (saveBtn) saveBtn.disabled = false;
+          if (authNote) authNote.textContent = "Logged in as " + (user.email || "admin") + ".";
+        } else {
+          authGate.hidden = false;
+          builderContent.hidden = true;
+          diagnose();
+        }
+      } catch (err) {
+        diagnose("Error while checking login: " + String(err && err.message || err));
       }
     }
 
     document.getElementById("gateLoginBtn").addEventListener("click", function () {
-      if (window.netlifyIdentity) window.netlifyIdentity.open("login");
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.open("login");
+      } else {
+        diagnose("The login widget script hasn't loaded — try refreshing the page.");
+      }
     });
 
     if (window.netlifyIdentity) {
@@ -326,8 +349,28 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
       window.netlifyIdentity.on("login", refreshAuthUI);
       window.netlifyIdentity.on("logout", refreshAuthUI);
     } else {
-      document.getElementById("gateStatus").textContent = "Couldn't load the login widget — try refreshing the page.";
+      diagnose("window.netlifyIdentity did not load from identity.netlify.com.");
     }
+
+    // The widget's own "init" event has no timeout of its own — if it never
+    // fires (a widget-internal quirk, a network hiccup fetching identity
+    // settings, etc.) this page would otherwise be stuck forever on
+    // "Checking login status..." with the login button never revealed. Bail
+    // out after a few seconds so there's always something to click, and
+    // surface enough state to diagnose it without needing devtools.
+    setTimeout(function () {
+      if (resolved) return;
+      var hasWidget = !!window.netlifyIdentity;
+      var currentUserResult = "n/a";
+      if (hasWidget) {
+        try {
+          currentUserResult = JSON.stringify(window.netlifyIdentity.currentUser());
+        } catch (err) {
+          currentUserResult = "threw: " + String(err && err.message || err);
+        }
+      }
+      diagnose("widget loaded: " + hasWidget + " · currentUser(): " + currentUserResult);
+    }, 4000);
   })();
 
   var STORAGE_KEY = "vpfans-newsletter-builder-draft-v2";
