@@ -1,29 +1,11 @@
 import type { APIRoute } from 'astro';
+import { REPO_OWNER, REPO_NAME, SAVE_DIR, isValidSlug, jsonResponse, githubHeaders, verifyLoggedIn } from '../../../lib/newsletter-repo';
 
 export const prerender = false;
 
-const REPO_OWNER = 'steve-meyers';
-const REPO_NAME = 'villa-park-friends-and-neighbors';
-const SAVE_DIR = 'email-templates/sent';
-
-function isValidSlug(slug: unknown): slug is string {
-  return typeof slug === 'string' && /^[a-z0-9-]{1,80}$/.test(slug);
-}
-
-function jsonResponse(body: Record<string, unknown>, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  });
-}
-
 async function commitFile(token: string, path: string, content: string, message: string): Promise<void> {
   const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    Accept: 'application/vnd.github+json',
-    'Content-Type': 'application/json',
-  };
+  const headers = { ...githubHeaders(token), 'Content-Type': 'application/json' };
 
   let sha: string | undefined;
   const existing = await fetch(`${apiUrl}?ref=main`, { headers });
@@ -50,19 +32,6 @@ async function commitFile(token: string, path: string, content: string, message:
     const errorBody = await putResponse.text();
     throw new Error(`GitHub returned ${putResponse.status} while saving ${path}: ${errorBody}`);
   }
-}
-
-/**
- * Confirms the request carries a live Netlify Identity session by asking GoTrue
- * directly, rather than decoding the nf_jwt cookie ourselves — this stays correct
- * regardless of how the Netlify adapter shapes the underlying function runtime.
- */
-async function verifyLoggedIn(request: Request, jwt: string): Promise<boolean> {
-  const origin = new URL(request.url).origin;
-  const response = await fetch(`${origin}/.netlify/identity/user`, {
-    headers: { Authorization: `Bearer ${jwt}` },
-  });
-  return response.ok;
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {

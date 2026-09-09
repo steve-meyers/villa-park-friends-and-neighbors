@@ -109,6 +109,11 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     iframe#previewFrame { flex: 1; width: 100%; border: 0; background: var(--paper); }
     .draft-controls { display: flex; gap: 8px; margin-bottom: 16px; }
     .draft-controls button { flex: 1; }
+    .repo-picker-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
+    .repo-picker-overlay[hidden] { display: none; }
+    .repo-picker-box { background: #fff; border-radius: 10px; padding: 24px; max-width: 420px; width: 100%; max-height: 70vh; overflow-y: auto; }
+    .repo-picker-box h2 { margin: 0 0 14px 0; font-size: 16px; }
+    .repo-picker-item { display: block; width: 100%; text-align: left; margin-bottom: 6px; }
     fieldset { border: 1px solid var(--line); border-radius: 8px; margin: 0 0 16px 0; padding: 14px 14px 6px 14px; background: #fff; }
     legend { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal-dark); padding: 0 6px; }
     label { display: block; font-size: 12px; font-weight: 600; color: #333; margin: 10px 0 4px 0; }
@@ -145,6 +150,14 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
 
 <div id="builderContent" hidden>
 
+<div id="repoPickerOverlay" class="repo-picker-overlay" hidden>
+  <div class="repo-picker-box">
+    <h2>Load from repo</h2>
+    <div id="repoPickerList"></div>
+    <button type="button" id="repoPickerCancel" class="subtle">Cancel</button>
+  </div>
+</div>
+
 <header class="app-header">
   <h1>🏡 Villa Park FANs — Newsletter Builder</h1>
   <p>Fill in this month's content, pick events straight from the calendar, watch the preview update, then copy the HTML/plain text into MailerLite or save a copy to the repo.</p>
@@ -173,6 +186,7 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     <div class="draft-controls">
       <button type="button" id="saveDraftBtn">💾 Save draft to file</button>
       <button type="button" id="loadDraftBtn">📂 Load draft from file</button>
+      <button type="button" id="loadRepoBtn">🗄️ Load from repo</button>
       <input type="file" id="loadDraftInput" accept="application/json" style="display:none;">
     </div>
 
@@ -899,15 +913,19 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     onChange();
   });
 
-  document.getElementById("resetBtn").addEventListener("click", function () {
-    if (!confirm("Reset all fields to the example content? This can't be undone.")) return;
-    state = JSON.parse(JSON.stringify(defaultState));
+  function applyLoadedState(newState) {
+    state = newState;
     saveState();
     populateSimpleFields();
     renderNewsItems();
     renderEventCards();
     renderCalendarChecklist();
     renderPreview();
+  }
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    if (!confirm("Reset all fields to the example content? This can't be undone.")) return;
+    applyLoadedState(JSON.parse(JSON.stringify(defaultState)));
   });
 
   document.getElementById("saveSlug").addEventListener("input", function (el) {
@@ -936,18 +954,75 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
         alert("That doesn't look like a valid draft file.");
         return;
       }
-      state = mergeWithDefaults(parsed);
-      saveState();
-      populateSimpleFields();
-      renderNewsItems();
-      renderEventCards();
-      renderCalendarChecklist();
-      renderPreview();
+      applyLoadedState(mergeWithDefaults(parsed));
       showToast("Draft loaded");
     };
     reader.readAsText(file);
     e.target.value = "";
   });
+
+  function hideRepoPicker() {
+    document.getElementById("repoPickerOverlay").hidden = true;
+  }
+
+  function showRepoPicker(items) {
+    var list = document.getElementById("repoPickerList");
+    list.innerHTML = "";
+    if (!items.length) {
+      list.innerHTML = '<p class="hint">No newsletters have been saved to the repo yet.</p>';
+    } else {
+      items.forEach(function (slug) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "repo-picker-item";
+        btn.textContent = slug;
+        btn.addEventListener("click", function () {
+          loadFromRepo(slug);
+        });
+        list.appendChild(btn);
+      });
+    }
+    document.getElementById("repoPickerOverlay").hidden = false;
+  }
+
+  function loadFromRepo(slug) {
+    fetch("/api/newsletter/load?slug=" + encodeURIComponent(slug), { credentials: "same-origin" })
+      .then(function (res) {
+        return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+      })
+      .then(function (result) {
+        hideRepoPicker();
+        if (!result.ok) {
+          alert("Couldn't load that newsletter: " + (result.data && result.data.error ? result.data.error : "unknown error"));
+          return;
+        }
+        applyLoadedState(mergeWithDefaults(result.data.state));
+        showToast("Loaded " + slug + " from the repo");
+      })
+      .catch(function (err) {
+        hideRepoPicker();
+        alert("Couldn't load that newsletter: " + err.message);
+      });
+  }
+
+  document.getElementById("loadRepoBtn").addEventListener("click", function () {
+    fetch("/api/newsletter/list", { credentials: "same-origin" })
+      .then(function (res) {
+        return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+      })
+      .then(function (result) {
+        if (!result.ok) {
+          alert("Couldn't list saved newsletters: " + (result.data && result.data.error ? result.data.error : "unknown error"));
+          return;
+        }
+        showRepoPicker(result.data.items || []);
+      })
+      .catch(function (err) {
+        alert("Couldn't list saved newsletters: " + err.message);
+      });
+  });
+
+  document.getElementById("repoPickerCancel").addEventListener("click", hideRepoPicker);
 
   document.getElementById("saveRepoBtn").addEventListener("click", function () {
     var slug = document.getElementById("saveSlug").value.trim();
