@@ -44,7 +44,7 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Newsletter Builder — Villa Park FANs</title>
-  <style>
+  <style is:global>
     :root {
       --teal: #3f7a76;
       --teal-dark: #24504c;
@@ -54,6 +54,7 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
       --line: #e9e0c8;
       --muted: #6b6552;
     }
+    html { color-scheme: light; }
     * { box-sizing: border-box; }
     body {
       margin: 0;
