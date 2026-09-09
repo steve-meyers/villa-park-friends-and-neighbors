@@ -296,6 +296,8 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
   // verifies the session with Netlify's identity service on every request.
   (function setUpAuthGate() {
     var pollHandle = null;
+    var tickCount = 0;
+    console.log("[nb-auth] setUpAuthGate starting, netlifyIdentity present:", !!window.netlifyIdentity);
 
     function setGateStatus(html) {
       document.getElementById("gateStatus").innerHTML = html;
@@ -337,13 +339,20 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     // that was already valid before this page loaded). The real check is
     // polled directly instead, and the UI reflects whatever it finds within
     // half a second regardless of whether any event ever fires.
-    function refreshAuthUI() {
+    function refreshAuthUI(source) {
+      tickCount++;
+      var n = tickCount;
       try {
-        var user = (window.netlifyIdentity && window.netlifyIdentity.currentUser()) || readStoredSession();
+        var fromWidget = window.netlifyIdentity && window.netlifyIdentity.currentUser();
+        var fromStorage = readStoredSession();
+        var user = fromWidget || fromStorage;
+        console.log("[nb-auth] tick " + n + " (source: " + source + ") — widget currentUser():", fromWidget, "| localStorage session:", fromStorage);
+
         var authGate = document.getElementById("authGate");
         var builderContent = document.getElementById("builderContent");
         var saveBtn = document.getElementById("saveRepoBtn");
         var authNote = document.getElementById("authNote");
+        console.log("[nb-auth] tick " + n + " — DOM before update: authGate.hidden=" + authGate.hidden + " builderContent.hidden=" + builderContent.hidden);
 
         if (user) {
           authGate.hidden = true;
@@ -354,17 +363,22 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
             clearInterval(pollHandle);
             pollHandle = null;
           }
+          console.log("[nb-auth] tick " + n + " — RESOLVED: revealing builder for", user.email);
         } else {
           authGate.hidden = false;
           builderContent.hidden = true;
           diagnose(window.netlifyIdentity ? null : "window.netlifyIdentity did not load from identity.netlify.com.");
+          console.log("[nb-auth] tick " + n + " — no user found, gate stays up");
         }
+        console.log("[nb-auth] tick " + n + " — DOM after update: authGate.hidden=" + authGate.hidden + " builderContent.hidden=" + builderContent.hidden);
       } catch (err) {
+        console.error("[nb-auth] tick " + n + " threw:", err);
         diagnose("Error while checking login: " + String(err && err.message || err));
       }
     }
 
     document.getElementById("gateLoginBtn").addEventListener("click", function () {
+      console.log("[nb-auth] Log in button clicked, currentUser() at click time:", window.netlifyIdentity && window.netlifyIdentity.currentUser());
       if (window.netlifyIdentity) {
         window.netlifyIdentity.open("login");
       } else {
@@ -373,13 +387,13 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     });
 
     if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", refreshAuthUI);
-      window.netlifyIdentity.on("login", refreshAuthUI);
-      window.netlifyIdentity.on("logout", refreshAuthUI);
+      window.netlifyIdentity.on("init", function () { refreshAuthUI("event:init"); });
+      window.netlifyIdentity.on("login", function () { refreshAuthUI("event:login"); });
+      window.netlifyIdentity.on("logout", function () { refreshAuthUI("event:logout"); });
     }
 
-    refreshAuthUI();
-    pollHandle = setInterval(refreshAuthUI, 500);
+    refreshAuthUI("immediate");
+    pollHandle = setInterval(function () { refreshAuthUI("poll"); }, 500);
   })();
 
   var STORAGE_KEY = "vpfans-newsletter-builder-draft-v2";
