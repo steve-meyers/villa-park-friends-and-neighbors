@@ -89,6 +89,7 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
     }
     .auth-bar button { font: inherit; font-weight: 700; cursor: pointer; border: 1px solid var(--line); background: var(--gold); padding: 6px 14px; border-radius: 6px; }
     .auth-gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--teal-dark); padding: 24px; }
+    .auth-gate[hidden] { display: none; }
     .auth-gate-box { background: #fff; border-radius: 10px; padding: 32px 36px; max-width: 380px; text-align: center; }
     .auth-gate-box h1 { font-size: 18px; margin: 0 0 12px 0; }
     .auth-gate-box p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 0 0 18px 0; }
