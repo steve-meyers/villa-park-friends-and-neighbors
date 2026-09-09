@@ -295,7 +295,6 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
   // ever authorized server-side, in /api/newsletter/save, which independently
   // verifies the session with Netlify's identity service on every request.
   (function setUpAuthGate() {
-    var everChecked = false;
     var pollHandle = null;
 
     function setGateStatus(html) {
@@ -313,18 +312,34 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
       setGateStatus(lines.join("<br>"));
     }
 
+    // netlifyIdentity.currentUser() reads from the widget's own internal
+    // reactive store, which — at least on this page — can disagree with
+    // reality: the widget's own "Logged in" modal correctly showed an
+    // authenticated session while currentUser() kept reporting none. GoTrue
+    // itself persists the real session directly to localStorage under
+    // "gotrue.user" (that's what GoTrue's own recoverSession() reads), so
+    // that's checked directly here instead of trusting the wrapper.
+    function readStoredSession() {
+      try {
+        var raw = localStorage.getItem("gotrue.user");
+        if (!raw) return null;
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.token && parsed.token.access_token) return parsed;
+        return null;
+      } catch (e) {
+        return null;
+      }
+    }
+
     // The widget's own init/login/logout events are used as a fast path
     // below, but they're not trusted as the only source of truth — in
     // practice they don't reliably fire in every situation (e.g. a session
-    // that was already valid before this page loaded). currentUser() itself
-    // is cheap and safe to call repeatedly, so it's polled directly as the
-    // real check, and the UI reflects whatever it reports within half a
-    // second regardless of whether any event ever fires.
+    // that was already valid before this page loaded). The real check is
+    // polled directly instead, and the UI reflects whatever it finds within
+    // half a second regardless of whether any event ever fires.
     function refreshAuthUI() {
-      if (!window.netlifyIdentity) return;
       try {
-        var user = window.netlifyIdentity.currentUser();
-        everChecked = true;
+        var user = (window.netlifyIdentity && window.netlifyIdentity.currentUser()) || readStoredSession();
         var authGate = document.getElementById("authGate");
         var builderContent = document.getElementById("builderContent");
         var saveBtn = document.getElementById("saveRepoBtn");
@@ -342,7 +357,7 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
         } else {
           authGate.hidden = false;
           builderContent.hidden = true;
-          diagnose();
+          diagnose(window.netlifyIdentity ? null : "window.netlifyIdentity did not load from identity.netlify.com.");
         }
       } catch (err) {
         diagnose("Error while checking login: " + String(err && err.message || err));
@@ -361,20 +376,10 @@ const upcomingEventsJson = JSON.stringify(upcomingEvents).replace(/</g, '\\u003c
       window.netlifyIdentity.on("init", refreshAuthUI);
       window.netlifyIdentity.on("login", refreshAuthUI);
       window.netlifyIdentity.on("logout", refreshAuthUI);
-    } else {
-      diagnose("window.netlifyIdentity did not load from identity.netlify.com.");
     }
 
     refreshAuthUI();
     pollHandle = setInterval(refreshAuthUI, 500);
-
-    // Only reachable if window.netlifyIdentity itself never became available
-    // at all (e.g. blocked by an extension) — refreshAuthUI's immediate call
-    // above already resolves the normal "loaded but not logged in yet" case.
-    setTimeout(function () {
-      if (everChecked) return;
-      diagnose("widget loaded: " + !!window.netlifyIdentity + " (still retrying automatically)");
-    }, 4000);
   })();
 
   var STORAGE_KEY = "vpfans-newsletter-builder-draft-v2";
