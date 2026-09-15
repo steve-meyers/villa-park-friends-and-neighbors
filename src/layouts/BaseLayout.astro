@@ -1,9 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import '../styles/global.css';
 import { optimizedImage } from '../lib/image';
 import { DISCORD_INVITE_URL } from '../lib/social';
 import DiscordFloatingInvite from '../components/DiscordFloatingInvite.astro';
+import AnnouncementBanner from '../components/AnnouncementBanner.astro';
 
 interface Props {
   title: string;
@@ -22,6 +23,10 @@ const {
 const circles = (await getCollection('circles')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title)
 );
+
+const bannerEntry = await getEntry('banner', 'site-banner');
+const bannerMessages =
+  Astro.url.pathname === '/' && bannerEntry?.data.enabled ? bannerEntry.data.messages : [];
 
 const pageTitle = fullTitle ? title : `${title} | Villa Park Friends and Neighbors, Denver`;
 const ogImageUrl = new URL(optimizedImage(image, 1200), Astro.site).href;
@@ -82,6 +87,7 @@ const organizationSchema = {
     </script>
   </head>
   <body class="min-h-screen flex flex-col overflow-x-hidden">
+    <AnnouncementBanner messages={bannerMessages} />
     <header
       id="site-header"
       class="sticky top-0 z-30 flex items-center justify-between gap-4 px-6 py-4 bg-teal-header shadow-md transition-[background-color] duration-150"

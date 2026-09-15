@@ -80,6 +80,24 @@ collections:
       - { label: "Display Order", name: "order", widget: "number", default: 0 }
       - { label: "Blurb", name: "body", widget: "markdown" }
 
+  - name: "banner"
+    label: "Homepage Banner"
+    files:
+      - name: "site-banner"
+        label: "Homepage Banner"
+        file: "src/content/banner/site-banner.md"
+        fields:
+          - { label: "Show Banner", name: "enabled", widget: "boolean", default: true, hint: "Turn the whole banner on or off without deleting the messages below." }
+          - label: "Messages"
+            name: "messages"
+            widget: "list"
+            summary: "{{fields.text}}"
+            hint: "Each message cycles automatically on the homepage. Add more than one to show multiple concurrent announcements."
+            fields:
+              - { label: "Message", name: "text", widget: "string" }
+              - { label: "Link", name: "url", widget: "string", required: false, hint: "Optional. Can be a full URL or a path on this site, e.g. /events." }
+              - { label: "Link Text", name: "linkLabel", widget: "string", required: false, default: "Learn more", hint: "Only used if a Link is set." }
+
   - name: "gallery"
     label: "About Page Photos"
     files:

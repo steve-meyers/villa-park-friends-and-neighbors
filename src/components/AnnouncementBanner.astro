@@ -1,0 +1,159 @@
+---
+interface BannerMessage {
+  text: string;
+  url?: string;
+  linkLabel?: string;
+}
+
+interface Props {
+  messages: BannerMessage[];
+}
+
+const { messages } = Astro.props;
+---
+
+{
+  messages.length > 0 && (
+    <div
+      class="announcement-banner bg-gold text-ink"
+      role="region"
+      aria-label="Site announcements"
+      data-messages={JSON.stringify(messages)}
+    >
+      <div class="max-w-2xl mx-auto flex items-center gap-3 px-4 sm:px-6 py-2.5">
+        <div class="flex-1 min-w-0 flex items-center gap-2">
+          <span class="announcement-text text-sm font-semibold truncate" aria-live="polite" />
+          <a
+            class="announcement-link text-sm font-extrabold whitespace-nowrap underline decoration-2 underline-offset-4 decoration-teal-deep text-teal-deep hover:text-teal-header"
+            href="#"
+            hidden
+          />
+        </div>
+
+        {messages.length > 1 && (
+          <div class="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              class="announcement-prev flex items-center justify-center w-7 h-7 rounded-full text-teal-deep hover:bg-black/10 cursor-pointer"
+              aria-label="Previous announcement"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="rotate-180" aria-hidden="true">
+                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div class="announcement-dots flex items-center gap-1.5 px-0.5" role="tablist" aria-label="Choose announcement" />
+            <button
+              type="button"
+              class="announcement-next flex items-center justify-center w-7 h-7 rounded-full text-teal-deep hover:bg-black/10 cursor-pointer"
+              aria-label="Next announcement"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        <button
+          type="button"
+          class="announcement-dismiss shrink-0 text-ink/60 hover:text-ink text-base leading-none cursor-pointer"
+          aria-label="Dismiss announcements"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<style is:global>
+  .announcement-dot::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+
+  .announcement-dot.is-active::before {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.announcement-banner').forEach((root) => {
+    const messages: { text: string; url?: string; linkLabel?: string }[] = JSON.parse(
+      root.dataset.messages ?? '[]'
+    );
+    if (messages.length === 0) return;
+
+    const textEl = root.querySelector<HTMLElement>('.announcement-text');
+    const linkEl = root.querySelector<HTMLAnchorElement>('.announcement-link');
+    const dotsWrap = root.querySelector<HTMLElement>('.announcement-dots');
+    const prevBtn = root.querySelector<HTMLButtonElement>('.announcement-prev');
+    const nextBtn = root.querySelector<HTMLButtonElement>('.announcement-next');
+    const dismissBtn = root.querySelector<HTMLButtonElement>('.announcement-dismiss');
+    if (!textEl || !linkEl || !dismissBtn) return;
+
+    const INTERVAL = 4500;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let index = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    const dots: HTMLButtonElement[] = [];
+    if (dotsWrap) {
+      messages.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'announcement-dot flex items-center justify-center w-4 h-4 text-teal-deep cursor-pointer';
+        dot.setAttribute('aria-label', `Show announcement ${i + 1} of ${messages.length}`);
+        dot.addEventListener('click', () => go(i, true));
+        dotsWrap.appendChild(dot);
+        dots.push(dot);
+      });
+    }
+
+    function render() {
+      const message = messages[index];
+      textEl!.textContent = message.text;
+      if (message.url) {
+        linkEl!.hidden = false;
+        linkEl!.href = message.url;
+        linkEl!.textContent = `${message.linkLabel || 'Learn more'} →`;
+      } else {
+        linkEl!.hidden = true;
+      }
+      dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+    }
+
+    function go(i: number, manual: boolean) {
+      index = (i + messages.length) % messages.length;
+      render();
+      if (manual) restart();
+    }
+
+    function restart() {
+      if (timer) clearInterval(timer);
+      if (reduceMotion || messages.length < 2) return;
+      timer = setInterval(() => go(index + 1, false), INTERVAL);
+    }
+
+    prevBtn?.addEventListener('click', () => go(index - 1, true));
+    nextBtn?.addEventListener('click', () => go(index + 1, true));
+    root.addEventListener('mouseenter', () => timer && clearInterval(timer));
+    root.addEventListener('mouseleave', restart);
+    root.addEventListener('focusin', () => timer && clearInterval(timer));
+    root.addEventListener('focusout', restart);
+
+    dismissBtn.addEventListener('click', () => {
+      if (timer) clearInterval(timer);
+      root.hidden = true;
+    });
+
+    render();
+    restart();
+  });
+</script>

@@ -47,6 +47,22 @@ const news = defineCollection({
   }),
 });
 
+const banner = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/banner' }),
+  schema: z.object({
+    enabled: z.boolean().default(true),
+    messages: z
+      .array(
+        z.object({
+          text: z.string(),
+          url: z.string().optional(),
+          linkLabel: z.string().optional(),
+        })
+      )
+      .default([]),
+  }),
+});
+
 const gallery = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/gallery' }),
   schema: z.object({
@@ -61,4 +77,4 @@ const gallery = defineCollection({
   }),
 });
 
-export const collections = { blog, resources, pages, circles, news, gallery };
+export const collections = { blog, resources, pages, circles, news, gallery, banner };
