@@ -78,6 +78,12 @@ const organizationSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
 
     <script is:inline>
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    </script>
+
+    <script is:inline>
       (function () {
         const stored = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
