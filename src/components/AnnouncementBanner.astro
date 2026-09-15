@@ -20,48 +20,52 @@ const { messages } = Astro.props;
       aria-label="Site announcements"
       data-messages={JSON.stringify(messages)}
     >
-      <div class="max-w-2xl mx-auto flex items-center gap-3 px-4 sm:px-6 py-2.5">
-        <div class="flex-1 min-w-0 flex items-center gap-2">
-          <span class="text-base leading-none shrink-0" aria-hidden="true">📬</span>
-          <span class="announcement-text text-sm font-semibold truncate" aria-live="polite" />
-          <a
-            class="announcement-link text-sm font-extrabold whitespace-nowrap underline decoration-2 underline-offset-4 decoration-teal-deep text-teal-deep hover:text-teal-header"
-            href="#"
-            hidden
-          />
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 px-4 sm:px-6 py-2.5">
+        <div class="flex-1 min-w-0 flex items-start gap-2">
+          <span class="text-base leading-none shrink-0 mt-px" aria-hidden="true">📬</span>
+          <p class="m-0 text-sm font-semibold leading-snug">
+            <span class="announcement-text" aria-live="polite" />{' '}
+            <a
+              class="announcement-link font-extrabold whitespace-nowrap underline decoration-2 underline-offset-4 decoration-teal-deep text-teal-deep hover:text-teal-header"
+              href="#"
+              hidden
+            />
+          </p>
         </div>
 
-        {messages.length > 1 && (
-          <div class="flex items-center gap-1 shrink-0">
-            <button
-              type="button"
-              class="announcement-prev flex items-center justify-center w-7 h-7 rounded-full text-teal-deep hover:bg-black/10 cursor-pointer"
-              aria-label="Previous announcement"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="rotate-180" aria-hidden="true">
-                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
-            <div class="announcement-dots flex items-center gap-1.5 px-0.5" role="tablist" aria-label="Choose announcement" />
-            <button
-              type="button"
-              class="announcement-next flex items-center justify-center w-7 h-7 rounded-full text-teal-deep hover:bg-black/10 cursor-pointer"
-              aria-label="Next announcement"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
-        )}
+        <div class="flex items-center sm:contents">
+          {messages.length > 1 && (
+            <div class="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                class="announcement-prev flex items-center justify-center w-7 h-7 rounded-full text-teal-deep hover:bg-black/10 cursor-pointer"
+                aria-label="Previous announcement"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="rotate-180" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="announcement-dots flex items-center gap-1.5 px-0.5" role="tablist" aria-label="Choose announcement" />
+              <button
+                type="button"
+                class="announcement-next flex items-center justify-center w-7 h-7 rounded-full text-teal-deep hover:bg-black/10 cursor-pointer"
+                aria-label="Next announcement"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+          )}
 
-        <button
-          type="button"
-          class="announcement-dismiss shrink-0 text-ink/60 hover:text-ink text-base leading-none cursor-pointer"
-          aria-label="Dismiss announcements"
-        >
-          &times;
-        </button>
+          <button
+            type="button"
+            class="announcement-dismiss shrink-0 text-ink/60 hover:text-ink text-base leading-none cursor-pointer ml-auto sm:ml-0"
+            aria-label="Dismiss announcements"
+          >
+            &times;
+          </button>
+        </div>
       </div>
     </div>
   )
