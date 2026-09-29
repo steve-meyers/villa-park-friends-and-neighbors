@@ -1,3 +1,5 @@
+import sanitizeHtml from 'sanitize-html';
+
 const CALENDAR_ID = '0ce3a25e6fd955c22169b082528dc03ccdf62b9e88f3e9ba1c4fff8c61a8ac9a@group.calendar.google.com';
 const CALENDAR_API_BASE = 'https://www.googleapis.com/calendar/v3/calendars';
 
@@ -79,6 +81,31 @@ function toCalendarEvent(event: GoogleEvent): CalendarEvent {
     end: event.end.dateTime ?? event.end.date ?? '',
     allDay: !event.start.dateTime,
   };
+}
+
+/**
+ * Event descriptions created in Google Calendar's rich-text editor come back from the
+ * API as HTML (bold, links, <br> line breaks). Rendering that with the allowlist below
+ * keeps formatting instead of showing raw tags; plain-text descriptions (no markup)
+ * pass through unchanged aside from entity-escaping.
+ */
+const descriptionSanitizeOptions: sanitizeHtml.IOptions = {
+  allowedTags: ['a', 'b', 'strong', 'i', 'em', 'u', 'br', 'p', 'ul', 'ol', 'li'],
+  allowedAttributes: { a: ['href', 'target', 'rel'] },
+  allowedSchemes: ['http', 'https', 'mailto'],
+  transformTags: {
+    a: sanitizeHtml.simpleTransform('a', { target: '_blank', rel: 'noopener noreferrer' }),
+  },
+};
+
+export function sanitizeEventDescriptionHtml(description: string): string {
+  return sanitizeHtml(description, descriptionSanitizeOptions);
+}
+
+/** Plain-text rendering of a (possibly HTML) event description, for meta tags and structured data. */
+export function eventDescriptionToText(description: string): string {
+  const withBreaks = description.replace(/<br\s*\/?>/gi, ' ').replace(/<\/(p|li|div)>/gi, ' ');
+  return sanitizeHtml(withBreaks, { allowedTags: [], allowedAttributes: {} });
 }
 
 export class CalendarApiError extends Error {

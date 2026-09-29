@@ -8,6 +8,8 @@ import {
   formatEventDate,
   eventSlug,
   shortIdFromSlug,
+  sanitizeEventDescriptionHtml,
+  eventDescriptionToText,
   CALENDAR_SUBSCRIBE_URL,
 } from '../../lib/calendar';
 
@@ -59,8 +61,11 @@ function truncate(text: string, max: number): string {
   return clean.length > max ? `${clean.slice(0, max - 1).trimEnd()}…` : clean;
 }
 
+const descriptionText = event?.description ? eventDescriptionToText(event.description) : '';
+const descriptionHtml = event?.description ? sanitizeEventDescriptionHtml(event.description) : '';
+
 const ogDescription = event
-  ? [whenText, event.location, event.description ? truncate(event.description, 160) : '']
+  ? [whenText, event.location, descriptionText ? truncate(descriptionText, 160) : '']
       .filter(Boolean)
       .join(' — ')
   : undefined;
@@ -73,7 +78,7 @@ const eventSchema = event && {
   endDate: event.end,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  ...(event.description && { description: event.description }),
+  ...(descriptionText && { description: descriptionText }),
   ...(event.location && {
     location: {
       '@type': 'Place',
@@ -126,8 +131,8 @@ const eventSchema = event && {
         <p class="text-neutral-600 dark:text-[#c9c2ae] break-words">{event.location}</p>
       )}
 
-      {event.description && (
-        <p class="break-words" style="white-space: pre-line;">{event.description}</p>
+      {descriptionHtml && (
+        <div class="break-words" style="white-space: pre-line;" set:html={descriptionHtml} />
       )}
 
       <div class="flex flex-col gap-3 mt-6">
