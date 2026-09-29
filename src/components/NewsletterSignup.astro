@@ -1,15 +1,16 @@
 ---
 interface Props {
   class?: string;
+  id?: string;
 }
 
-const { class: className = '' } = Astro.props;
+const { class: className = '', id } = Astro.props;
 ---
 
-<div class={`card ${className}`}>
-  <h3 class="mb-1">Get Neighborhood Updates</h3>
+<div class={`card scroll-mt-[88px] ${className}`} id={id}>
+  <h3 class="mb-1">Get the Neighborhood Newsletter</h3>
   <p class="mb-3">
-    Subscribe to get new posts and neighborhood news in your inbox. No spam, unsubscribe any time.
+    Subscribe to get monthly updates and neighborhood news in your inbox.
   </p>
 
   <div id="mlb2-44411529" class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-44411529">
