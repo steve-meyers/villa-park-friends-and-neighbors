@@ -1,5 +1,5 @@
 ---
-title: We're an RNO now! But why?
+title: We're an RNO now! But Why?
 date: 2026-09-30T13:39:00.000-06:00
 author: Neighborhood Team
 summary: "\n\n"
