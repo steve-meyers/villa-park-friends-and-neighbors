@@ -30,4 +30,6 @@ Their team can provide assistance with applications, questions, and other issues
 * Temporary Assistance for Needy Families (TANF)
 * Other federal, state, and local public assistance programs, depending on your circumstances
 
-**All services are provided free of charge.**
+**All services are provided free of charge.** 
+
+Follow this link to learn more and get legal help: [Benefits Assistance Program - Colorado Poverty Law Project](https://copovertylawproject.org/our-work/benefits-assistance-program/)
