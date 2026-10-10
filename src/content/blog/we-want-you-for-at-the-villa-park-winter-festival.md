@@ -1,5 +1,5 @@
 ---
-title: We Want YOU for at the Villa Park Winter Festival!!!
+title: We Want YOU for the Villa Park Winter Festival!!!
 date: 2026-10-10T09:10:00.000-06:00
 author: Neighborhood Team
 image: /images/uploads/winter-festival-0.jpg
