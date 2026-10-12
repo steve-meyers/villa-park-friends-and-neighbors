@@ -20,6 +20,6 @@ What does that mean in practice? Well, it could mean a lot of things, but here a
 * If you want to help plan the festival, we need your help!
 * If you just want to show up and enjoy, that is as critical as everything else
 
-There are many ways to get involved in the Winter Festival, so please get involved sooner rather than later. [Contact us today](https://villaparkfans.com/contact/) to ensure we're including you!
+There are many ways to get involved in the Winter Festival, so please get involved sooner rather than later. [Click here to contact us today](https://villaparkfans.com/contact/) to ensure we're including you!
 
 ![People enjoy the Villa Park Winter Festival in Villa Park, Denver](/images/uploads/winter-festival-1.jpg)
