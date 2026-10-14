@@ -5,6 +5,9 @@ import { optimizedImage } from '../lib/image';
 import { DISCORD_INVITE_URL } from '../lib/social';
 import DiscordFloatingInvite from '../components/DiscordFloatingInvite.astro';
 import AnnouncementBanner from '../components/AnnouncementBanner.astro';
+import HalloweenCobwebs from '../components/HalloweenCobwebs.astro';
+import HalloweenEyes from '../components/HalloweenEyes.astro';
+import { HALLOWEEN_THEME_ENABLED } from '../lib/seasonal';
 
 interface Props {
   title: string;
@@ -93,6 +96,7 @@ const organizationSchema = {
     </script>
   </head>
   <body class="min-h-screen flex flex-col overflow-x-hidden">
+    {HALLOWEEN_THEME_ENABLED && <HalloweenEyes />}
     <AnnouncementBanner messages={bannerMessages} />
     <header
       id="site-header"
@@ -149,7 +153,7 @@ const organizationSchema = {
             >☀️</span
           >
           <span class="theme-option-dark flex items-center justify-center w-6 h-6 rounded-full text-xs leading-none transition-all opacity-40 dark:opacity-100 dark:bg-white/25"
-            >🌙</span
+            >{HALLOWEEN_THEME_ENABLED ? '🎃' : '🌙'}</span
           >
         </button>
 
@@ -164,7 +168,7 @@ const organizationSchema = {
             >☀️</span
           >
           <span class="theme-option-dark flex items-center justify-center w-8 h-8 rounded-full text-sm leading-none transition-all opacity-40 dark:opacity-100 dark:bg-white/25"
-            >🌙</span
+            >{HALLOWEEN_THEME_ENABLED ? '🎃' : '🌙'}</span
           >
         </button>
 
@@ -234,9 +238,21 @@ const organizationSchema = {
       </div>
     </header>
 
+    {Astro.url.pathname !== '/' && HALLOWEEN_THEME_ENABLED && (
+      <div class="relative w-full h-0" aria-hidden="true">
+        <HalloweenCobwebs position="top" />
+      </div>
+    )}
+
     <main class="flex-1 w-full max-w-2xl mx-auto px-6 pt-8 pb-16">
       <slot />
     </main>
+
+    {HALLOWEEN_THEME_ENABLED && (
+      <div class="relative w-full h-0" aria-hidden="true">
+        <HalloweenCobwebs position="bottom" />
+      </div>
+    )}
 
     <footer class="text-center text-ink text-xs font-mono uppercase tracking-wide py-6 bg-gold">
       <p>&copy; {new Date().getFullYear()} Villa Park Friends and Neighbors</p>

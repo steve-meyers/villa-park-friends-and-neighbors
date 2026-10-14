@@ -1,0 +1,59 @@
+---
+// Glowing eyes that blink in the page background, dark mode only.
+// Each pair gets its own size/position/timing so they blink out of sync.
+const eyePairs = [
+  { top: '9%', left: '10%', size: 40, delay: '0s', duration: '6.4s' },
+  { top: '16%', left: '84%', size: 32, delay: '1.6s', duration: '7.1s' },
+  { top: '33%', left: '5%', size: 46, delay: '3.1s', duration: '5.8s' },
+  { top: '42%', left: '68%', size: 30, delay: '0.8s', duration: '8s' },
+  { top: '58%', left: '22%', size: 36, delay: '4s', duration: '6.2s' },
+  { top: '71%', left: '90%', size: 42, delay: '2.3s', duration: '7.4s' },
+  { top: '85%', left: '42%', size: 32, delay: '5s', duration: '6.8s' },
+];
+---
+
+<div class="hidden dark:block fixed inset-0 -z-20 pointer-events-none" aria-hidden="true">
+  {
+    eyePairs.map((eye) => (
+      <svg
+        viewBox="0 0 64 28"
+        class="eye-pair absolute"
+        style={`top:${eye.top}; left:${eye.left}; width:${eye.size}px; height:${eye.size * 0.4375}px; animation-duration:${eye.duration}; animation-delay:${eye.delay};`}
+      >
+        <ellipse cx="14" cy="14" rx="12" ry="7" fill="#ffb347" />
+        <ellipse cx="50" cy="14" rx="12" ry="7" fill="#ffb347" />
+        <circle cx="14" cy="14" r="3.4" fill="#1a0f00" />
+        <circle cx="50" cy="14" r="3.4" fill="#1a0f00" />
+      </svg>
+    ))
+  }
+</div>
+
+<style>
+  .eye-pair {
+    opacity: 0.85;
+    transform-origin: center;
+    filter: drop-shadow(0 0 4px rgba(255, 140, 20, 0.55));
+    animation-name: eye-blink;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes eye-blink {
+    0%,
+    90%,
+    100% {
+      transform: scaleY(1);
+    }
+    93%,
+    96% {
+      transform: scaleY(0.08);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eye-pair {
+      animation: none;
+    }
+  }
+</style>

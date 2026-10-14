@@ -5,7 +5,9 @@ import NewsletterSignup from '../components/NewsletterSignup.astro';
 import DiscordInvite from '../components/DiscordInvite.astro';
 import FacebookGroupInvite from '../components/FacebookGroupInvite.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
+import HalloweenCobwebs from '../components/HalloweenCobwebs.astro';
 import { optimizedImage } from '../lib/image';
+import { HALLOWEEN_THEME_ENABLED } from '../lib/seasonal';
 
 const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -23,6 +25,11 @@ const photos = galleryEntry?.data.photos ?? [];
     >
     </div>
     <div class="relative max-w-2xl mx-auto px-6 py-14 text-center">
+      {HALLOWEEN_THEME_ENABLED && (
+        <div class="absolute top-3 left-1/2 -translate-x-1/2 text-3xl" aria-hidden="true">
+          🎃
+        </div>
+      )}
       <span class="badge mb-5">Neighbors welcome</span>
       <h1 class="text-white text-4xl sm:text-5xl mb-3">Villa Park<br />Friends and Neighbors</h1>
       <p class="text-white/70 text-sm sm:text-base uppercase tracking-widest mb-3">
@@ -36,6 +43,7 @@ const photos = galleryEntry?.data.photos ?? [];
         neighborhood in Denver, Colorado — volunteer-run news, updates, and resources.
       </p>
     </div>
+    {HALLOWEEN_THEME_ENABLED && <HalloweenCobwebs />}
   </div>
 
   <h2 class="mt-10 mb-2">Latest Updates</h2>

@@ -1,0 +1,59 @@
+---
+// Corner cobwebs — dark mode only, a small easter egg (they don't read well
+// against the light cream background). Two different strand patterns, not
+// a mirrored copy, for some variety corner to corner.
+//
+// `position="top"` is meant to be rendered as the last child inside the
+// homepage hero's `relative` wrapper: `top-full` anchors it to the hero's
+// actual bottom edge — however tall it renders at a given screen size — so
+// it starts exactly where the green banner ends, instead of fighting with
+// the header/nav.
+//
+// `position="bottom"` is the same pair of webs, flipped to hang from the
+// bottom corners instead, meant to sit in a full-width `relative` wrapper
+// placed right above the footer.
+//
+// Negative z-index tucks both behind real page content (text, cards, nav)
+// while staying in front of the blinking-eyes layer (-z-20).
+interface Props {
+  position?: 'top' | 'bottom';
+}
+
+const { position = 'top' } = Astro.props;
+
+const leftAnchor = position === 'top' ? 'top-full left-0' : 'bottom-0 left-0';
+const rightAnchor = position === 'top' ? 'top-full right-0' : 'bottom-0 right-0';
+const leftFlip = position === 'top' ? '' : '-scale-y-100';
+const rightFlip = position === 'top' ? '-scale-x-100' : '-scale-100';
+---
+
+<svg
+  viewBox="0 0 160 240"
+  class={`hidden dark:block absolute ${leftAnchor} -z-10 w-28 h-[168px] sm:w-40 sm:h-60 text-white/60 pointer-events-none ${leftFlip}`}
+  style="filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.55));"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path
+    d="M0,0 L150,0 M0,0 L140,40 M0,0 L115,85 M0,0 L80,120 M0,0 L50,160 M0,0 L22,195 M0,0 L0,230 M27,0 L28,8 L18,14 L18,26 L10,30 L4,33 L0,48 M69,0 L70,20 L48,36 L42,62 L23,72 L9,78 L0,110 M120,0 L119,34 L86,64 L70,106 L39,125 L16,140 L0,189 M28,8 L23,72 M70,20 L16,140"
+  ></path>
+</svg>
+<svg
+  viewBox="0 0 160 240"
+  class={`hidden dark:block absolute ${rightAnchor} -z-10 w-28 h-[168px] sm:w-40 sm:h-60 text-white/60 pointer-events-none ${rightFlip}`}
+  style="filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.55));"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path
+    d="M0,0 L130,0 M0,0 L125,45 M0,0 L95,80 M0,0 L68,115 M0,0 L42,150 M0,0 L18,185 M0,0 L0,215 M26,0 L21,8 L22,18 L12,21 L9,32 L3,30 L0,41 M62,0 L55,20 L52,44 L29,48 L21,75 L7,70 L0,99 M107,0 L98,35 L86,72 L51,86 L36,128 L13,130 L0,172 M21,8 L21,75 M52,44 L13,130"
+  ></path>
+</svg>
