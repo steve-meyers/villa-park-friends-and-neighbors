@@ -1,0 +1,63 @@
+---
+// Ambient falling snow for a dark/evergreen section — same approach as
+// HalloweenEyes.astro (a spread of absolutely-positioned elements, each with
+// its own size/timing so they don't move in lockstep), but drifting down
+// instead of blinking in place.
+interface Props {
+  count?: number;
+}
+
+const { count = 20 } = Astro.props;
+
+const flakes = Array.from({ length: count }, (_, i) => {
+  const seed = i * 2.17;
+  const left = ((i * 97) % 100) + Math.sin(seed) * 3;
+  const size = 3 + ((i * 7) % 5);
+  const duration = 10 + ((i * 5) % 11);
+  const delay = -((i * 3.7) % duration);
+  const drift = Math.sin(seed) * 28;
+  const opacity = 0.35 + ((i % 4) * 0.12);
+  return { left, size, duration, delay, drift, opacity };
+});
+---
+
+<div class="snowfall" aria-hidden="true">
+  {flakes.map((f) => (
+    <span
+      class="snowflake"
+      style={`left:${f.left.toFixed(1)}%; width:${f.size}px; height:${f.size}px; opacity:${f.opacity.toFixed(2)}; animation-duration:${f.duration}s; animation-delay:${f.delay.toFixed(1)}s; --drift:${f.drift.toFixed(0)}px;`}
+    />
+  ))}
+</div>
+
+<style>
+  .snowfall {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .snowflake {
+    position: absolute;
+    top: -16px;
+    border-radius: 50%;
+    background: #fffaf0;
+    filter: blur(0.3px);
+    animation-name: snowfall-drop;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  /* A fixed, generous fall distance — simpler and more robust than measuring
+     the container's actual height, since anything past the real bottom is
+     just clipped by the parent's overflow:hidden rather than visible. */
+  @keyframes snowfall-drop {
+    from { transform: translate(0, 0); }
+    to { transform: translate(var(--drift), 2000px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .snowflake { animation: none; opacity: 0.25; }
+  }
+</style>

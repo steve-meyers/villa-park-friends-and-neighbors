@@ -1,0 +1,383 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SnowFall from '../components/SnowFall.astro';
+import { fetchEventByShortId, buildGoogleAddUrl, formatEventDate, eventSlug } from '../lib/calendar';
+
+// The real calendar event behind the "We Want YOU" blog post
+// (src/content/blog/we-want-you-for-at-the-villa-park-winter-festival.md).
+// Pulled live so this page can't drift out of sync with the actual event.
+const SHORT_ID = 'x9cahw';
+
+let event = null;
+let loadError = false;
+try {
+  event = await fetchEventByShortId(SHORT_ID);
+} catch (err) {
+  console.error('Failed to load Winter Festival event', err);
+  loadError = true;
+}
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=60');
+
+const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+const timeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'America/Denver',
+});
+
+const dateLabel = event ? formatEventDate(event, dateOptions) : 'Saturday, December 12';
+const timeLabel =
+  event && !event.allDay
+    ? `${timeFormatter.format(new Date(event.start))} – ${timeFormatter.format(new Date(event.end))}`
+    : '11:00 AM – 3:00 PM';
+const location = event?.location || '910 Tennyson St, Denver, CO 80204';
+const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+const addCalHref = event ? buildGoogleAddUrl(event) : undefined;
+const icsHref = event ? `/events/${eventSlug(event)}.ics` : undefined;
+const eventPageHref = event ? `/events/${eventSlug(event)}` : '/events';
+
+const ogDescription =
+  'Join us Saturday, December 12 from 11am–3pm at Joe P. Martinez Park for hot drinks, a neighbor craft market, and live jazz — free and open to the whole neighborhood.';
+---
+
+<BaseLayout title="Winter Festival" description={ogDescription} image="/images/uploads/winter-festival-0.jpg">
+  <div class="event-page">
+    <div class="event-page__texture" aria-hidden="true"></div>
+    <svg class="event-page__lights" viewBox="0 0 860 56" fill="none" aria-hidden="true">
+      <path d="M0 6 Q107.5 50 215 12 M215 12 Q322.5 50 430 12 M430 12 Q537.5 50 645 12 M645 12 Q752.5 50 860 6"
+            stroke="#9fd0cd" stroke-opacity=".5" stroke-width="1.6" stroke-linecap="round" />
+      {Array.from({ length: 10 }).map((_, i) => {
+        const x = 40 + i * 86;
+        const colors = ['#edd286', '#fffaf0', '#9fd0cd', '#d9b95c'];
+        const color = colors[i % colors.length];
+        const dip = 18 + Math.sin(i) * 10;
+        return (
+          <circle class="event-page__bulb" cx={x} cy={30 + dip * 0.3} r="7" fill={color}
+                  style={`animation-delay:-${(i * 0.4).toFixed(2)}s`} />
+        );
+      })}
+    </svg>
+    <SnowFall count={24} />
+    <svg class="event-page__drift" viewBox="0 0 860 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 60V36C92 20 158 44 248 31 338 18 398 41 498 29 598 17 676 39 768 27 816 20 842 25 860 23V60Z" fill="#fffaf0" fill-opacity=".09" />
+      <path d="M0 60V46C96 34 162 52 252 42 342 32 404 50 500 41 596 32 678 48 770 39 818 34 844 38 860 36V60Z" fill="#fffaf0" fill-opacity=".07" />
+    </svg>
+
+    <section class="hero" aria-labelledby="wf-title">
+      <div class="hero__masthead">
+        <div class="hero__logo-chip">
+          <img src="/images/uploads/torres-logo.png" alt="Councilwoman Jamie Torres, District 3" />
+        </div>
+        <p class="hero__presenter">
+          <span>Presented by</span>
+          <strong>Villa Park Friends and Neighbors</strong>
+        </p>
+      </div>
+
+      <p class="hero__eyebrow">Villa Park</p>
+      <h1 id="wf-title" class="hero__title">Winter Festival</h1>
+      <div class="hero__rule" aria-hidden="true"><span></span><span class="hero__rule-dot">❄</span><span></span></div>
+      <p class="hero__title-es">Festival de Invierno</p>
+
+      {loadError && (
+        <p class="hero__error">We couldn't load live event details right now — the basics below are still correct.</p>
+      )}
+
+      <ul class="hero__facts">
+        <li class="hero__fact hero__fact--when">
+          <div class="hero__fact-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            <span>{dateLabel}</span>
+          </div>
+          <div class="hero__fact-divider"></div>
+          <div class="hero__fact-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/></svg>
+            <span>{timeLabel}</span>
+          </div>
+        </li>
+        <li class="hero__fact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          <span>
+            <strong>Joe P. Martinez Park</strong>
+            <a href={mapHref} target="_blank" rel="noopener">{location}</a>
+          </span>
+        </li>
+      </ul>
+
+      <div class="hero__ctas">
+        {addCalHref && <a href={addCalHref} target="_blank" rel="noopener" class="btn">Add to Calendar</a>}
+        {icsHref && <a href={icsHref} class="btn-ghost">Download .ics</a>}
+        <a href={eventPageHref} class="btn-ghost">Full event listing →</a>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature">
+        <span class="feature__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-5z"/><path d="M17 11.5h1.8a2.7 2.7 0 0 1 0 5.4H17"/><path d="M8 3c-.8 1.2-.8 2.3 0 3.5M12 2.6c-.9 1.4-.9 2.7 0 4.1"/></svg>
+        </span>
+        <h3 class="feature__title">Hot Beverages</h3>
+        <p class="feature__es">Bebidas calientes</p>
+      </div>
+      <div class="feature">
+        <span class="feature__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5 4.6 4h14.8L21 9.5z"/><path d="M3 9.5c1.5 1.8 3 1.8 4.5 0 1.5 1.8 3 1.8 4.5 0 1.5 1.8 3 1.8 4.5 0 1.5 1.8 3 1.8 4.5 0"/><path d="M5.5 11.5V20h13v-8.5"/><path d="M9.5 20v-4.5h5V20"/></svg>
+        </span>
+        <h3 class="feature__title">Craft Market</h3>
+        <p class="feature__es">Mercado de artesanía</p>
+      </div>
+      <div class="feature">
+        <span class="feature__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5.5l10-2V16"/><circle cx="6.5" cy="18" r="2.6"/><circle cx="16.5" cy="16" r="2.6"/><path d="M9 9.5l10-2"/></svg>
+        </span>
+        <h3 class="feature__title">Live Music</h3>
+        <p class="feature__es">Música en vivo</p>
+      </div>
+    </section>
+
+    <p class="more">
+      <strong>+ Kids activities, food, and more!</strong>
+      <span>¡Actividades para niños, comida y más!</span>
+    </p>
+
+    {event?.description && (
+      <div class="event-card about-text">
+        <p class="mb-0" style="white-space: pre-line;">{event.description}</p>
+      </div>
+    )}
+
+    <section class="event-card vendor">
+      <span class="vendor__label">Call for vendors · Vendedores</span>
+      <h2 class="vendor__title">Interested in being a vendor?</h2>
+      <p class="vendor__es">¿Le interesa ser vendedor? Escríbanos para más información.</p>
+      <div class="vendor__ctas">
+        <a href="/contact" class="btn-primary">Contact Us</a>
+      </div>
+    </section>
+
+    <p class="read-more">
+      Want the backstory? Read <a href="/blog/we-want-you-for-at-the-villa-park-winter-festival">why we're doing this again</a>.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ---- The event canvas: one continuous evergreen ground behind every ----
+     section on this page, not just the top band. ---- */
+
+  .event-page {
+    position: relative;
+    margin: -2rem -1.5rem -4rem;
+    padding: 2.5rem 1.5rem 3rem;
+    overflow: hidden;
+    color: #fffaf0;
+    background:
+      radial-gradient(ellipse 72% 45% at 50% 10%, rgba(237, 210, 134, 0.16) 0, transparent 55%),
+      radial-gradient(circle at 10% 0%, rgba(123, 181, 178, 0.25) 0, transparent 40%),
+      linear-gradient(180deg, #14302d 0%, #234d49 18%, #255450 42%, #1f453f 72%, #163330 100%);
+  }
+  @media (min-width: 640px) {
+    .event-page { margin: -2rem -2rem -4rem; border-radius: 0 0 1.25rem 1.25rem; }
+  }
+
+  .event-page__texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle, transparent 0, transparent 28px,
+      rgba(255, 255, 255, 0.045) 28px, rgba(255, 255, 255, 0.045) 29.5px, transparent 29.5px
+    );
+    background-size: 68px 68px;
+  }
+
+  .event-page__lights { position: relative; display: block; width: 100%; height: auto; margin: -0.5rem 0 1rem; max-width: 640px; margin-inline: auto; }
+  .event-page__bulb { animation: wf-twinkle 3.6s ease-in-out infinite alternate; }
+  @keyframes wf-twinkle { from { opacity: 0.45; } to { opacity: 0.95; } }
+  @media (prefers-reduced-motion: reduce) { .event-page__bulb { animation: none; opacity: 0.8; } }
+
+  /* Snow banked along the bottom edge, same as the print poster. */
+  .event-page__drift {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3.5rem;
+    pointer-events: none;
+  }
+
+  .hero { position: relative; max-width: 640px; margin: 0 auto; text-align: center; }
+
+  .hero__masthead { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .hero__logo-chip { background: #fff; border-radius: 6px; padding: 0.4rem 0.6rem; line-height: 0; }
+  .hero__logo-chip img { display: block; height: 32px; width: auto; }
+  .hero__presenter { margin: 0; font-size: 0.8rem; color: #cfe8e5; }
+  .hero__presenter span { display: block; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.65rem; }
+  .hero__presenter strong { font-family: var(--font-heading); color: #fffaf0; letter-spacing: 0.01em; }
+
+  .hero__eyebrow {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  .hero__title {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(2.6rem, 9vw, 4.2rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: #fffaf0;
+  }
+  .hero__rule { display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin: 0.6rem 0; color: var(--color-teal-light); }
+  .hero__rule span:not(.hero__rule-dot) { height: 2px; width: 2.5rem; background: linear-gradient(90deg, transparent, var(--color-teal-light)); border-radius: 2px; }
+  .hero__rule span:last-child:not(.hero__rule-dot) { background: linear-gradient(90deg, var(--color-teal-light), transparent); }
+  .hero__title-es {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 5vw, 2.1rem);
+    text-transform: uppercase;
+    color: var(--color-teal-light);
+  }
+
+  .hero__error { margin: 1rem auto 0; max-width: 32rem; font-size: 0.8rem; color: #f2ece0; opacity: 0.85; }
+
+  .hero__facts { list-style: none; margin: 1.75rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; text-align: left; }
+  @media (max-width: 480px) { .hero__facts { grid-template-columns: 1fr; } }
+
+  .hero__fact {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--color-gold);
+    /* teal-deep, not gold-ink: gold-ink intentionally becomes gold itself in
+       dark mode (see global.css), which would vanish against this gold tile */
+    color: var(--color-teal-deep);
+    border-radius: 0.6rem;
+    padding: 0.85rem 1rem;
+    font-weight: 700;
+  }
+  .hero__fact--when { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+  .hero__fact-row { display: flex; align-items: center; gap: 0.75rem; }
+  .hero__fact-divider { height: 1px; background: rgba(36, 80, 76, 0.25); }
+  .hero__fact svg { width: 1.3rem; flex: none; }
+  .hero__fact strong { display: block; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: -0.01em; }
+  .hero__fact a { display: block; font-size: 0.82rem; color: var(--color-teal-deep); text-decoration: underline; text-underline-offset: 2px; opacity: 0.85; }
+  .hero__fact a:hover { opacity: 1; }
+
+  .hero__ctas { margin-top: 1.75rem; display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+  .hero__ctas .btn { text-decoration: none; }
+  .btn-ghost {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.8rem;
+    color: #fffaf0;
+    border: 1.5px solid rgba(159, 208, 205, 0.5);
+    border-radius: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .btn-ghost:hover { background: rgba(255, 255, 255, 0.08); color: #fffaf0; }
+
+  /* ---- Below the hero: still on the evergreen canvas, so every card here ----
+     is a translucent panel (matching the original poster's treatment) rather
+     than a solid white card, and text colors are picked for a dark ground
+     regardless of the site's own light/dark toggle. ---- */
+
+  .event-card {
+    border: 1.5px solid rgba(159, 208, 205, 0.22);
+    border-radius: 0.75rem;
+    background: rgba(255, 250, 240, 0.055);
+  }
+
+  .features {
+    position: relative;
+    max-width: 640px;
+    margin: 2.5rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.9rem;
+  }
+  @media (max-width: 480px) { .features { grid-template-columns: 1fr; } }
+
+  .feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 1.25rem 0.75rem;
+    border: 1.5px solid rgba(159, 208, 205, 0.22);
+    border-radius: 0.7rem;
+    background: rgba(255, 250, 240, 0.055);
+  }
+  @media (max-width: 480px) { .feature { flex-direction: row; text-align: left; } }
+
+  .feature__icon {
+    width: 3.2rem;
+    height: 3.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-teal-light);
+    color: var(--color-teal-deep);
+    flex: none;
+  }
+  .feature__icon svg { width: 1.7rem; }
+
+  .feature__title { margin: 0; font-size: 1.05rem; color: #fffaf0; }
+  .feature__es { margin: 0; font-size: 0.85rem; color: var(--color-teal-light); }
+
+  .more { position: relative; max-width: 640px; margin: 1.75rem auto 0; text-align: center; }
+  .more strong { display: block; font-family: var(--font-heading); text-transform: uppercase; color: var(--color-gold); font-size: 1.15rem; }
+  .more span { display: block; font-size: 0.9rem; color: var(--color-teal-light); margin-top: 0.15rem; }
+
+  .about-text {
+    position: relative;
+    max-width: 640px;
+    margin: 1.75rem auto 0;
+    padding: 1.5rem 1.75rem;
+    color: #f2ece0;
+  }
+
+  .vendor { position: relative; max-width: 640px; margin: 2rem auto 0; padding: 1.75rem; text-align: center; }
+  .vendor__label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-teal-deep);
+    background: var(--color-gold);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+  }
+  .vendor__title { margin: 0.75rem 0 0.25rem; color: #fffaf0; }
+  .vendor__es { margin: 0 0 1.25rem; color: var(--color-teal-light); }
+  .vendor__ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; align-items: center; }
+
+  .read-more {
+    position: relative;
+    max-width: 640px;
+    margin: 2rem auto 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #cfe8e5;
+  }
+  .read-more a { color: var(--color-gold); text-decoration-color: rgba(237, 210, 134, 0.5); }
+  .read-more a:hover { color: #fffaf0; }
+</style>
