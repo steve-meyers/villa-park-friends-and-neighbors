@@ -1,7 +1,7 @@
 ---
 export const prerender = false;
 
-import { fetchUpcomingEvents, formatEventDate, eventSlug, type CalendarEvent } from '../../lib/calendar';
+import { fetchUpcomingEvents, formatEventDate, eventSlug, eventDescriptionToText, type CalendarEvent } from '../../lib/calendar';
 
 interface PickerEvent {
   id: string;
@@ -21,7 +21,7 @@ function toPickerEvent(event: CalendarEvent): PickerEvent {
     id: event.id,
     title: event.title,
     dateLabel: datePart + timePart,
-    description: event.description,
+    description: eventDescriptionToText(event.description),
     link: `https://villaparkfans.com/events/${eventSlug(event)}`,
   };
 }

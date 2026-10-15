@@ -293,7 +293,7 @@ export function buildGoogleAddUrl(event: CalendarEvent): string {
     'dates',
     `${toGoogleDateParam(event.start, event.allDay)}/${toGoogleDateParam(event.end, event.allDay)}`
   );
-  if (event.description) url.searchParams.set('details', event.description);
+  if (event.description) url.searchParams.set('details', eventDescriptionToText(event.description));
   if (event.location) url.searchParams.set('location', event.location);
   return url.toString();
 }
@@ -324,7 +324,7 @@ export function buildIcsContent(event: CalendarEvent): string {
     dtStart,
     dtEnd,
     `SUMMARY:${escapeIcsText(event.title)}`,
-    event.description ? `DESCRIPTION:${escapeIcsText(event.description)}` : '',
+    event.description ? `DESCRIPTION:${escapeIcsText(eventDescriptionToText(event.description))}` : '',
     event.location ? `LOCATION:${escapeIcsText(event.location)}` : '',
     'END:VEVENT',
     'END:VCALENDAR',
