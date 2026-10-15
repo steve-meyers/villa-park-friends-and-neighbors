@@ -37,13 +37,17 @@ const location = event?.location || '910 Tennyson St, Denver, CO 80204';
 const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
 const addCalHref = event ? buildGoogleAddUrl(event) : undefined;
 const icsHref = event ? `/events/${eventSlug(event)}.ics` : undefined;
-const eventPageHref = event ? `/events/${eventSlug(event)}` : '/events';
+
+// This page is the full festival listing — the calendar event entry links
+// back here, so "Copy Link" (not a link onward to that thinner event page)
+// is what people actually want to share.
+const shareUrl = new URL('/winter-festival', Astro.url.origin).href;
 
 const ogDescription =
   'Join us Saturday, December 12 from 11am–3pm at Joe P. Martinez Park for hot drinks, a neighbor craft market, and live jazz — free and open to the whole neighborhood.';
 ---
 
-<BaseLayout title="Winter Festival" description={ogDescription} image="/images/uploads/winter-festival-0.jpg">
+<BaseLayout title="Winter Festival" description={ogDescription} image="/images/og-winter-festival.png">
   <div class="event-page">
     <div class="event-page__texture" aria-hidden="true"></div>
     <svg class="event-page__lights" viewBox="0 0 860 56" fill="none" aria-hidden="true">
@@ -110,7 +114,7 @@ const ogDescription =
       <div class="hero__ctas">
         {addCalHref && <a href={addCalHref} target="_blank" rel="noopener" class="btn">Add to Calendar</a>}
         {icsHref && <a href={icsHref} class="btn-ghost">Download .ics</a>}
-        <a href={eventPageHref} class="btn-ghost">Full event listing →</a>
+        <button type="button" class="btn-ghost" data-copy-link={shareUrl}>Copy Link</button>
       </div>
     </section>
 
@@ -163,6 +167,25 @@ const ogDescription =
     </p>
   </div>
 </BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-link]').forEach((button) => {
+    const url = button.dataset.copyLink;
+    if (!url) return;
+    const originalText = button.textContent;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        button.textContent = 'Copied!';
+      } catch {
+        button.textContent = 'Copy failed';
+      }
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 2000);
+    });
+  });
+</script>
 
 <style>
   /* ---- The event canvas: one continuous evergreen ground behind every ----
@@ -285,10 +308,12 @@ const ogDescription =
     letter-spacing: 0.04em;
     font-size: 0.8rem;
     color: #fffaf0;
+    background: none;
     border: 1.5px solid rgba(159, 208, 205, 0.5);
     border-radius: 0.5rem;
     padding: 0.55rem 1.1rem;
     text-decoration: none;
+    cursor: pointer;
     transition: background 0.15s ease;
   }
   .btn-ghost:hover { background: rgba(255, 255, 255, 0.08); color: #fffaf0; }

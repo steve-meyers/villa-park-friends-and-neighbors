@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const attemptedPath = Astro.url.pathname;
+---
+
+<BaseLayout title="Page Not Found" description="This page couldn't be found on villaparkfans.com.">
+  <div class="flex flex-col items-center text-center py-10">
+    <div class="notice -rotate-2 max-w-md">
+      <span class="badge mb-4">🧭 Wrong Turn</span>
+      <h1 class="mb-3">This Page Isn't<br />on Our Block</h1>
+      <p class="mb-4">
+        We checked up and down the street and couldn't find it. It may have moved, been
+        renamed, or the address was mistyped.
+      </p>
+      <p class="font-mono text-xs uppercase tracking-wide bg-cream dark:bg-night-bg border border-[#e9e0c8] dark:border-night-border rounded px-3 py-2 break-all inline-block mb-0">
+        {attemptedPath}
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-3 justify-center mt-8">
+      <a href="/" class="btn-primary">Back Home</a>
+      <a href="/events" class="btn">See What's Happening</a>
+    </div>
+  </div>
+</BaseLayout>
