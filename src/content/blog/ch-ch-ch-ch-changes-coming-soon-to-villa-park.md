@@ -12,13 +12,13 @@ All across Villa Park, the signs of change are everywhere. The urban farm operat
 
 ## Upgraded Basketball Court
 
-First on our list of upcoming changes is a refresh of the basketball court that sits just north of Grove Street and 12th Avenue. This basketball court has been here for years, but due to its uneven and cracked surfaces, it didn't get a lot of use. 
+First on our list of upcoming changes is a refresh of the basketball court that sits just north of Grove Street and 12th Avenue. This basketball court has been here for years, but due to its uneven and cracked surfaces, it didn't get a lot of use. Here is a little before and after:
 
 ![An image of how the basketball court at 12th and Grove looked before](/images/uploads/old-bball.jpg "Old basketball court, you can see the cracks from here!")
 
 ![A refinished basketball court with a very intimidating vehicle in front of it](/images/uploads/bball-court-with-crazy-blade-vehicle.jpeg "The resurfaced basketball court, check out that metal looking vehicle in front!")
 
-Hopefully the resurfacing makes it a more attractive place to play! Denver has also created a new, accessible ramp to the court to make it easier for everyone to shoot some hoops. 
+Hopefully the resurfacing makes it a more attractive place to play! Denver has also created a new, accessible ramp to the court to make it easier for everyone to shoot some hoops. Here's how it looks:
 
 ![A newly accessible ramp connecting to the Villa Park basketball court](/images/uploads/accessible-ramp-to-bball-court-.jpeg "The new, accessible ramp should open soon! ")
 
@@ -28,7 +28,7 @@ Have you ever heard of a desire path? Desire paths are unpaved places that peopl
 
 ![An aerial image of the desire path leading to the bridge in Villa Park, Denver](/images/uploads/new-path-aerial.jpg "An aerial image of the desire path leading to the bridge")
 
-Well, this path has been fully paved and is now open for walking! This won't just make it safer to walk and bike through that area, it also makes it more accessible, and cuts down on the time it will take for people to get to the bridge, whether they're headed to the other side of Paco Sanchez, the light rail, or wherever else they may need to go. It seems that this upgrade and the basketball court may have been a part of Denver's Place Network Investigation to make the area safer. Regardless of how it came about, they are cool upgrades!
+Well, this path has been fully paved and is now open for walking! This won't just make it safer to walk and bike through that area, it also makes it more accessible, and cuts down on the time it will take for people to get to the bridge, whether they're headed to the other side of Paco Sanchez, the light rail, or wherever else they may need to go. It seems that this upgrade and the basketball court may have been a part of Denver's Place Network Investigation to make the area safer. Regardless of how it came about, they are cool upgrades! Check it out:
 
 ![An image of the desire path, paved, in Villa Park, Denver](/images/uploads/new-path-to-hazel-bridge.jpeg "The new path, all paved now!")
 
