@@ -10,7 +10,7 @@ circles:
 ---
 All across Villa Park, the signs of change are everywhere. The urban farm operated by [Westwood-based nonprofit Re:Vision](https://www.revision.coop/) is in harvest mode, jack-o-lanterns are appearing on stoops, and the leaves on the trees in the gulch are turning shades of yellow and orange. With the end of the Summer heat, fall is a great time to reflect on the changes from the past year, but here in Villa Park, change is on the horizon instead of in the rearview mirror!
 
-#### Upgraded Basketball Court
+## Upgraded Basketball Court
 
 First on our list of upcoming changes is a refresh of the basketball court that sits just north of Grove Street and 12th Avenue. This basketball court has been here for years, but due to its uneven and cracked surfaces, it didn't get a lot of use. 
 
@@ -22,7 +22,7 @@ Hopefully the resurfacing makes it a more attractive place to play! Denver has a
 
 ![A newly accessible ramp connecting to the Villa Park basketball court](/images/uploads/accessible-ramp-to-bball-court-.jpeg "The new, accessible ramp should open soon! ")
 
-#### New Path Connecting Gulch Trail to Hazel Bridge
+## New Path Connecting Gulch Trail to Hazel Bridge
 
 Have you ever heard of a desire path? Desire paths are unpaved places that people want to walk, and walk there so much that they wear out little dirt paths through the grass. Here in Villa Park, there was a desire path on the Lakewood Gulch Trail, just north of 12th Avenue between Hooker Street and Hazel Court, that connected the trial to the bridge crossing the train tracks. Here it is from above: 
 
@@ -32,7 +32,7 @@ Well, this path has been fully paved and is now open for walking! This won't jus
 
 ![An image of the desire path, paved, in Villa Park, Denver](/images/uploads/new-path-to-hazel-bridge.jpeg "The new path, all paved now!")
 
-#### Neighborhood Traffic Management Plan Upgrades
+## Neighborhood Traffic Management Plan Upgrades
 
 It doesn't take too much time living in Villa Park to realize that crossing the street here can be quite dangerous, which is too bad considering our amazing network of bike and pedestrian trails! We even formed the [Mobility and Infrastructure Circle](https://villaparkfans.com/circles/mobility-and-infrastructure/) (which you should join) to advocate for street improvements here in our neighborhood to make it safer to get around. The city is improving a number of crossings that should make it safer in the near future!
 
@@ -49,7 +49,7 @@ These changes should make it much safer to move through Villa Park, and after 6 
 
 ![An image from the NTMP, at 10th and the Gulch Trail](/images/uploads/3-pedestrian-refuge-island-at-10th-and-gulch-trail-.jpg "Hopefully, this type of improvement slows down cars on 10th!")
 
-#### Pedestrian Crossing Upgrades
+## Pedestrian Crossing Upgrades
 
 Last but not least on this list are the Pedestrian Crossing Upgrades! These are promised for 2027 and are funded by the RISE Bond (which means they have to get these done on a time scale, chop chop!). It seems like these have been announced more recently, and are somewhat minor upgrades compared to the other stuff on this list, but still should make our area that much safer to get around. Three crossings are getting upgrades in this plan, they are:
 
@@ -60,8 +60,6 @@ Last but not least on this list are the Pedestrian Crossing Upgrades! These are 
 DOTI's website has more info, but this is the type of upgrade you can expect at the aforementioned crossings:
 
 ![An image from DOTI's website displaying the upgrades at Perry Street and the Gulch trail](/images/uploads/perry-crossing-improvement.jpg "The upgrade at Perry Street will be flashing lights to show cars you're crossing")
-
-
 
 You can see more about all the upgrades on the [2027 Pedestrian Crossing Construction page on DOTI's website here.](https://denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Department-of-Transportation-and-Infrastructure/Programs-Services/Projects/2027-Pedestrian-Crossing-Construction)
 
