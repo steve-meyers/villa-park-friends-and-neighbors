@@ -44,7 +44,7 @@ const icsHref = event ? `/events/${eventSlug(event)}.ics` : undefined;
 const shareUrl = new URL('/winter-festival', Astro.url.origin).href;
 
 const ogDescription =
-  'Join us Saturday, December 12 from 11am–3pm at Joe P. Martinez Park for hot drinks, a neighbor craft market, and live jazz — free and open to the whole neighborhood.';
+  'Join us Saturday, December 12 from 11am–3pm at Joe P. Martinez Park for hot drinks, a neighbor craft market, and live music — free and open to the whole neighborhood.';
 ---
 
 <BaseLayout title="Winter Festival" description={ogDescription} image="/images/og-winter-festival.png">
@@ -81,7 +81,7 @@ const ogDescription =
         </p>
       </div>
 
-      <p class="hero__eyebrow">Villa Park</p>
+      <p class="hero__eyebrow">2nd Annual Villa Park</p>
       <h1 id="wf-title" class="hero__title">Winter Festival</h1>
       <div class="hero__rule" aria-hidden="true"><span></span><span class="hero__rule-dot">❄</span><span></span></div>
       <p class="hero__title-es">Festival de Invierno</p>
@@ -147,12 +147,39 @@ const ogDescription =
       <span>¡Actividades para niños, comida y más!</span>
     </p>
 
-    <div class="event-card about-text">
-      <p class="mb-0">
-        Come join us for the Second Annual Villa Park Winter Festival! We'll have local
-        vendors peddling their crafts, local musicians playing live music, and food and drink.
-      </p>
-    </div>
+    <section class="highlights">
+      <div class="event-card highlight">
+        <span class="highlight__label">Music · Música</span>
+        <p class="highlight__count">4</p>
+        <h2 class="highlight__title">Confirmed Live Acts</h2>
+        <p class="highlight__es">Presentaciones musicales confirmadas</p>
+        <p class="highlight__note">Lineup coming soon · Programa próximamente</p>
+      </div>
+      <div class="event-card highlight">
+        <span class="highlight__label">Market · Mercado</span>
+        <p class="highlight__count">11+</p>
+        <h2 class="highlight__title">Confirmed Vendors</h2>
+        <p class="highlight__es">Vendedores confirmados</p>
+        <p class="highlight__note">Local crafts · Artesanía local</p>
+      </div>
+      <div class="event-card highlight highlight--wide">
+        <span class="highlight__label">Food · Comida</span>
+        <img
+          class="highlight__logo"
+          src="/images/uploads/la-salvadorena-pupusas-logo.png"
+          alt="La Salvadoreña Pupusas"
+          width="376"
+          height="181"
+        />
+        <h2 class="highlight__title">Pupusa Food Truck</h2>
+        <p class="highlight__es">Camión de pupusas</p>
+        <p class="highlight__hours">Serving 11:00 AM – 1:00 PM · De 11:00 a.m. a 1:00 p.m.</p>
+        <p class="highlight__note">
+          A local Villa Park favorite · Un favorito local de Villa Park
+          <a href="https://orderlasalvadorenapupusas.mobile-webview8.com/" target="_blank" rel="noopener">See the menu · Ver el menú</a>
+        </p>
+      </div>
+    </section>
 
     <section class="event-card vendor">
       <span class="vendor__label">Call for vendors · Vendedores</span>
@@ -372,16 +399,37 @@ const ogDescription =
   .more strong { display: block; font-family: var(--font-heading); text-transform: uppercase; color: var(--color-gold); font-size: 1.15rem; }
   .more span { display: block; font-size: 0.9rem; color: var(--color-teal-light); margin-top: 0.15rem; }
 
-  .about-text {
+  .highlights {
     position: relative;
     max-width: 640px;
     margin: 1.75rem auto 0;
-    padding: 1.5rem 1.75rem;
-    color: #f2ece0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
   }
+  @media (max-width: 480px) { .highlights { grid-template-columns: 1fr; } }
+
+  .highlight { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1.5rem 1.25rem; }
+  .highlight--wide { grid-column: 1 / -1; }
+  .highlight__hours { margin: 0.6rem 0 0; font-weight: 700; font-size: 0.9rem; color: var(--color-gold); }
+  .highlight__logo { display: block; width: auto; height: 4.5rem; max-width: 100%; margin-top: 0.75rem; }
+  .highlight__count {
+    margin: 0.75rem 0 0;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 3.2rem;
+    line-height: 1;
+    color: var(--color-gold);
+  }
+  .highlight__title { margin: 0.6rem 0 0.15rem; font-size: 1.15rem; color: #fffaf0; }
+  .highlight__es { margin: 0; font-size: 0.85rem; color: var(--color-teal-light); }
+  .highlight__note { margin: auto 0 0; padding-top: 1rem; font-size: 0.8rem; color: #cfe8e5; }
+  .highlight__note a { display: block; margin-top: 0.35rem; font-weight: 700; color: var(--color-gold); text-decoration-color: rgba(237, 210, 134, 0.5); }
+  .highlight__note a:hover { color: #fffaf0; }
 
   .vendor { position: relative; max-width: 640px; margin: 2rem auto 0; padding: 1.75rem; text-align: center; }
-  .vendor__label {
+  .vendor__label,
+  .highlight__label {
     display: inline-block;
     font-size: 0.7rem;
     font-weight: 800;
