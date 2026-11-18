@@ -45,6 +45,36 @@ const shareUrl = new URL('/winter-festival', Astro.url.origin).href;
 
 const ogDescription =
   'Join us Saturday, December 12 from 11am–3pm at Joe P. Martinez Park for hot drinks, a neighbor craft market, and live music — free and open to the whole neighborhood.';
+
+const lineup = [
+  {
+    time: '11:00 AM – 12:00 PM',
+    name: 'CCJA Faculty',
+    es: 'Profesores de CCJA',
+    logo: 'ccja-logo.png',
+    href: 'https://www.jazzarts.org/',
+  },
+  {
+    time: '12:10 – 12:40 PM',
+    name: 'CCJA Students',
+    es: 'Estudiantes de CCJA',
+    logo: 'ccja-logo.png',
+    href: 'https://www.jazzarts.org/',
+  },
+  {
+    time: '12:50 – 1:50 PM',
+    name: 'Teachers in the Summer',
+    logo: 'teachers-in-the-summer-logo.png',
+    href: 'https://www.instagram.com/teachersinthesummerband/',
+  },
+  {
+    time: '2:00 – 3:00 PM',
+    name: 'Weather Big Storm',
+    logo: 'weather-big-storm-logo.png',
+    href: 'https://soundcloud.com/weatherbigstorm',
+    headliner: true,
+  },
+];
 ---
 
 <BaseLayout title="Winter Festival" description={ogDescription} image="/images/og-winter-festival.png">
@@ -148,21 +178,35 @@ const ogDescription =
     </p>
 
     <section class="highlights">
-      <div class="event-card highlight">
+      <div class="event-card highlight highlight--wide">
         <span class="highlight__label">Music · Música</span>
-        <p class="highlight__count">4</p>
-        <h2 class="highlight__title">Confirmed Live Acts</h2>
-        <p class="highlight__es">Presentaciones musicales confirmadas</p>
-        <p class="highlight__note">Lineup coming soon · Programa próximamente</p>
+        <h2 class="highlight__title">Live Music Lineup</h2>
+        <p class="highlight__es">Programa de música en vivo</p>
+        <ol class="lineup">
+          {lineup.map((set) => (
+            <li class:list={['lineup__set', { 'lineup__set--headliner': set.headliner }]}>
+              <span class="lineup__time">{set.time}</span>
+              <img class="lineup__logo" src={`/images/uploads/${set.logo}`} alt="" width="192" height="192" />
+              <span class="lineup__act">
+                <strong>
+                  {set.href ? <a href={set.href} target="_blank" rel="noopener">{set.name}</a> : set.name}
+                </strong>
+                {set.es && <span>{set.es}</span>}
+                {set.headliner && <span class="lineup__badge">Headliner · Artista principal</span>}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p class="highlight__note">CCJA: Colorado Conservatory for the Jazz Arts</p>
       </div>
-      <div class="event-card highlight">
+      <div class="event-card highlight highlight--center">
         <span class="highlight__label">Market · Mercado</span>
         <p class="highlight__count">11+</p>
         <h2 class="highlight__title">Confirmed Vendors</h2>
         <p class="highlight__es">Vendedores confirmados</p>
         <p class="highlight__note">Local crafts · Artesanía local</p>
       </div>
-      <div class="event-card highlight highlight--wide">
+      <div class="event-card highlight">
         <span class="highlight__label">Food · Comida</span>
         <img
           class="highlight__logo"
@@ -173,9 +217,9 @@ const ogDescription =
         />
         <h2 class="highlight__title">Pupusa Food Truck</h2>
         <p class="highlight__es">Camión de pupusas</p>
-        <p class="highlight__hours">Serving 11:00 AM – 1:00 PM · De 11:00 a.m. a 1:00 p.m.</p>
+        <p class="highlight__hours"><span>Serving 11:00 AM – 1:00 PM</span> <span>De 11:00 a.m. a 1:00 p.m.</span></p>
         <p class="highlight__note">
-          A local Villa Park favorite · Un favorito local de Villa Park
+          <span>A local Villa Park favorite</span> <span>Un favorito local de Villa Park</span>
           <a href="https://orderlasalvadorenapupusas.mobile-webview8.com/" target="_blank" rel="noopener">See the menu · Ver el menú</a>
         </p>
       </div>
@@ -411,7 +455,11 @@ const ogDescription =
 
   .highlight { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 1.5rem 1.25rem; }
   .highlight--wide { grid-column: 1 / -1; }
+  .highlight--center { justify-content: center; }
+  .highlight--center .highlight__note { margin-top: 0; }
   .highlight__hours { margin: 0.6rem 0 0; font-weight: 700; font-size: 0.9rem; color: var(--color-gold); }
+  .highlight__hours span,
+  .highlight__note span { display: block; }
   .highlight__logo { display: block; width: auto; height: 4.5rem; max-width: 100%; margin-top: 0.75rem; }
   .highlight__count {
     margin: 0.75rem 0 0;
@@ -422,6 +470,41 @@ const ogDescription =
     color: var(--color-gold);
   }
   .highlight__title { margin: 0.6rem 0 0.15rem; font-size: 1.15rem; color: #fffaf0; }
+
+  .lineup { list-style: none; width: 100%; max-width: 32rem; margin: 1rem auto 0; padding: 0; text-align: left; }
+  .lineup__set {
+    display: grid;
+    grid-template-columns: 9.5rem auto 1fr;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-top: 1px solid rgba(159, 208, 205, 0.22);
+  }
+  .lineup__set:first-child { border-top: 0; }
+  @media (max-width: 480px) {
+    .lineup__set { grid-template-columns: auto 1fr; }
+    .lineup__time { grid-column: 1 / -1; }
+  }
+  .lineup__time { font-size: 0.85rem; font-weight: 700; color: var(--color-gold); font-variant-numeric: tabular-nums; }
+  .lineup__logo { display: block; width: 3.25rem; height: 3.25rem; border-radius: 50%; }
+  .lineup__set--headliner .lineup__logo { width: 4.25rem; height: 4.25rem; }
+  .lineup__act { display: flex; flex-direction: column; align-items: flex-start; color: #fffaf0; }
+  .lineup__act strong { font-family: var(--font-heading); font-size: 1rem; }
+  .lineup__act span { font-size: 0.8rem; color: var(--color-teal-light); }
+  .lineup__set--headliner .lineup__act strong { font-size: 1.2rem; color: var(--color-gold); }
+  .lineup__act strong a { color: inherit; text-decoration: underline; text-decoration-thickness: 1.5px; text-decoration-color: rgba(237, 210, 134, 0.5); text-underline-offset: 3px; }
+  .lineup__act strong a:hover { color: #fffaf0; }
+  .lineup__act .lineup__badge {
+    margin-top: 0.3rem;
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    background: var(--color-gold);
+    color: var(--color-teal-deep);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
   .highlight__es { margin: 0; font-size: 0.85rem; color: var(--color-teal-light); }
   .highlight__note { margin: auto 0 0; padding-top: 1rem; font-size: 0.8rem; color: #cfe8e5; }
   .highlight__note a { display: block; margin-top: 0.35rem; font-weight: 700; color: var(--color-gold); text-decoration-color: rgba(237, 210, 134, 0.5); }
